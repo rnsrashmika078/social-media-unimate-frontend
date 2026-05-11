@@ -27,15 +27,15 @@ const Card = ({
         className="flex w-fit h-fit items-center justify-center"
       />
       <div className="absolute bottom-5 left-5 right-5 text-white space-y-2">
-        <h1 className="text-xl font-bold w-full ">
+        {/* <h1 className="text-xl font-bold w-full ">
           {title ?? "This is the Header"}
-        </h1>
+        </h1> */}
 
-        <p className="text-sm max-w-xs w-full">
+        {/* <p className="text-sm max-w-xs w-full">
           {description ??
             "This is the description. this must be bit long based. make sure to give a big description. thank you!"}
-        </p>
-        {buttonText && <Button className="w-full">{buttonText}</Button>}
+        </p> */}
+        {/* {buttonText && <Button className="w-full">{buttonText}</Button>} */}
       </div>
     </div>
   );

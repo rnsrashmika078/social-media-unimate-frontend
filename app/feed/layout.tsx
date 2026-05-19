@@ -1,4 +1,3 @@
-import Post from "@/components/main/Post";
 import React, { ReactNode } from "react";
 
 interface FeedLayoutProps {

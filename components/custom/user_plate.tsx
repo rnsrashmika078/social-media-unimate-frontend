@@ -1,0 +1,50 @@
+/* eslint-disable @next/next/no-img-element */
+import Vercel from "@/public/images/profile.png";
+import Image from "next/image";
+import { EllipsisVertical } from "lucide-react";
+type UserPlateProps = {
+    profileImage?: string;
+    username?: string;
+    jobTitle?: string;
+    date?: string;
+    settings?: boolean;
+};
+const UserPlate = ({
+    profileImage,
+    username,
+    jobTitle,
+    date,
+    settings = true,
+}: UserPlateProps) => {
+    return (
+        <div className="flex items-center justify-between gap-5  w-full">
+            <div className="flex gap-3 items-center">
+                <Image
+                    src={profileImage || Vercel}
+                    alt={"profile_image"}
+                    width={50}
+                    height={50}
+                    loading="eager"
+                    className="flex border-2 rounded-full w-10 h-10 flex-shrink-0"
+                />
+                <div>
+                    <h1 className="text-md font-bold text-black dark:text-white ">
+                        {username ?? "Username goes here"}
+                    </h1>
+                    {jobTitle && (
+                        <p className="text-sm  text-gray-400">Undergraduate</p>
+                    )}
+                    {date && <p className="text-xs text-gray-400">10:25 AM</p>}
+                </div>
+            </div>
+
+            {settings && (
+                <div>
+                    <EllipsisVertical size={20} />
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default UserPlate;

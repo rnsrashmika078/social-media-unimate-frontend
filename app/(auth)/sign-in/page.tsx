@@ -1,8 +1,7 @@
-import Login from "@/components/custom/login";
-import React from "react";
+import SignIn from "@/components/custom/signIn";
 
 const page = () => {
-  return <Login />;
+  return <SignIn />;
 };
 
 export default page;

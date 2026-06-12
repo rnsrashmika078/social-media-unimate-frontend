@@ -4,6 +4,7 @@ import "./globals.css";
 import Theme from "@/components/custom/theme";
 import { store } from "./store/store";
 import { ReduxProvider } from "@/components/providers/reduxProvider";
+import QueryProvider from "./providers/queryClientProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,10 +37,12 @@ export default function RootLayout({
         className={` antialiased transition-all`}
         // style={{ fontFamily: "var(--font-rubik)" }}
       >
-        <div className="flex w-screen h-screen">
-          <ReduxProvider>{children}</ReduxProvider>
-        </div>
-        <Theme />
+        <QueryProvider>
+          <div className="flex w-screen h-screen">
+            <ReduxProvider>{children}</ReduxProvider>
+          </div>
+          <Theme />
+        </QueryProvider>
       </body>
     </html>
   );

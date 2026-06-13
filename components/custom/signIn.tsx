@@ -7,10 +7,15 @@ import ErrorMessage from "./error";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInSchema, signInSchemaType } from "@/app/schema/zodSchema";
 import { useMutation } from "@tanstack/react-query";
-import signInQuery from "@/app/queryOptions/authQuery";
-
+import Link from "next/link";
+import { signInQuery } from "@/app/queryOptions/authQuery";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/app/store/store";
+import { setAuthUser } from "@/app/store/authSlice";
 const SignIn = () => {
-  // react hook form
+  // react hook fomr
   const {
     register,
     handleSubmit,
@@ -20,20 +25,31 @@ const SignIn = () => {
     resolver: zodResolver(signInSchema),
   });
 
+  const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
   // tanstack mutation
-  const { mutate } = useMutation({
-    ...signInQuery(),
-    onSuccess: (data) => console.log(data),
-    onError: (err) => console.log(err),
-  });
+  const { mutate } = useMutation(signInQuery());
 
   // form submition
   const onSubmit = async (data: signInSchemaType) => {
-    mutate({
-      email: data.email,
-      password: data.password,
-    });
-    reset();
+    mutate(
+      {
+        email: data.email,
+        password: data.password,
+      },
+      {
+        onError: (error) => {
+          reset();
+          toast.error(error.message);
+        },
+        onSuccess: (data) => {
+          toast.success(data.message);
+          dispatch(setAuthUser(data?.user));
+          reset();
+          router.push(`/feed`);
+        },
+      },
+    );
   };
 
   return (
@@ -64,35 +80,31 @@ const SignIn = () => {
             Enter your login credentials to login
           </FieldDescription>
         </Field>
-        <Button type="submit" disabled={isSubmitting}>
-          SignIn
-        </Button>
-      </form>
-      <button
-        onClick={async () => {
-          const res_cookie = await fetch("/api/get-cookie");
-          const result = await res_cookie.json();
-          console.log("token", result.token);
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
-            {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
+        <div className="flex flex-col space-y-2">
+          <Button type="submit" disabled={isSubmitting}>
+            Sign In
+          </Button>
+          <FieldDescription className="text-center">
+            Forget the password ?{" "}
+            <Link href={"/reset"}>
+              <span>Reset</span>
+            </Link>
+          </FieldDescription>
 
-                Authorization: `Bearer ${result.token}`,
-              },
-            },
-          );
-          console.log("res", res);
-        }}
-      >
-        LOGOUT
-      </button>
+          <span className="border border-b-2"></span>
+
+          <FieldDescription className="text-center">
+            Create a new account
+          </FieldDescription>
+
+          <Link href={"/sign-up"}>
+            <Button type="submit" disabled={isSubmitting} className="w-full">
+              Sign Up
+            </Button>
+          </Link>
+        </div>
+      </form>
     </div>
-    // <div>
-    //   <TestQuery />
-    // </div>
   );
 };
 

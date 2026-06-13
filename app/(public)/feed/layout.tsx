@@ -1,11 +1,25 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
+import NavBar from "@/components/custom/nav_bar";
 
-const FeedLayout = ({ children }: { children: ReactNode }) => {
+const FeedLayout = ({
+  children,
+  left,
+  right,
+}: {
+  children: ReactNode;
+  left: ReactNode;
+  right: ReactNode;
+}) => {
   return (
-    <div className="flex w-full h-full justify-center items-center">
-      <div className="flex-1 w-full h-full bg-red-500">Section 01</div>
-      <div className="flex-2 w-full h-full overflow-y-auto">{children}</div>
-      <div className="flex-1 w-full h-full bg-green-500">Section 03</div>
+    <div className="w-full h-full justify-center items-center">
+      <NavBar />
+      <div className="flex w-full h-full justify-center items-center">
+        <div className="flex-1 w-full h-full bg-red-500">{left}</div>
+        <div className="lg:flex-2 flex-full w-full h-full overflow-y-auto">
+          {children}
+        </div>
+        <div className="flex-1 w-full h-full bg-green-500">{right}</div>
+      </div>
     </div>
   );
 };

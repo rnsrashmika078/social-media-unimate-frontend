@@ -1,43 +1,45 @@
 "use client";
-import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import React from "react";
+import { Field, FieldDescription, FieldLabel } from "../ui/field";
 import { Button } from "../ui/button";
-import { useForm } from "react-hook-form";
+import { Input } from "../ui/input";
 import ErrorMessage from "./error";
+import { resetPasswordQuery } from "@/app/queryOptions/authQuery";
+import { signInSchemaType, signInSchema } from "@/app/schema/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signUpSchema, signUpSchemaType } from "@/app/schema/zodSchema";
-import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
-import { signUpQuery } from "@/app/queryOptions/authQuery";
+// import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/store/store";
 import { setAuthUser } from "@/app/store/authSlice";
 
-// component
-const SignUp = () => {
-  const router = useRouter();
+const ResetPassword = () => {
+  // react hook fomr
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<signUpSchemaType>({
-    resolver: zodResolver(signUpSchema),
+  } = useForm<signInSchemaType>({
+    resolver: zodResolver(signInSchema),
   });
 
-  // tanstack mutation
-  const { mutate } = useMutation(signUpQuery());
+  const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
 
-  const onSubmit = async (data: signUpSchemaType) => {
+  // tanstack mutation
+  const { mutate } = useMutation(resetPasswordQuery());
+
+  // form submition
+  const onSubmit = async (data: signInSchemaType) => {
     mutate(
       {
-        username: data.username,
         email: data.email,
         password: data.password,
-        password_confirmation: data.password_confirmation,
       },
       {
         onError: (error) => {
@@ -53,22 +55,12 @@ const SignUp = () => {
     );
     reset();
   };
-
   return (
     <div className="border rounded-2xl flex flex-col w-full p-5">
-      <h1 className="text-2xl mb-4">Sign up</h1>
+      <h1 className="text-2xl mb-4">Reset Password</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Field className="mb-2">
-          <FieldLabel htmlFor="input-field-username">Username</FieldLabel>
-          <Input
-            {...register("username")}
-            id="input-field-username"
-            type="text"
-            className="p-5 mb-2"
-            placeholder="Enter your username"
-          />
-          {errors.username && <ErrorMessage error={errors.username?.message} />}
-          <FieldLabel htmlFor="input-field-username">Email</FieldLabel>
+          <FieldLabel htmlFor="input-field-email">Email</FieldLabel>
           <Input
             {...register("email")}
             id="input-field-email"
@@ -87,30 +79,21 @@ const SignUp = () => {
           />
           {errors.password && <ErrorMessage error={errors.password?.message} />}
 
-          <FieldLabel htmlFor="input-field-email">Confirm password</FieldLabel>
-          <Input
-            {...register("password_confirmation")}
-            id="input-field-confirm"
-            type="text"
-            className="p-5 mb-2"
-            placeholder="Enter your confirm password"
-          />
-          {errors.password_confirmation && (
-            <ErrorMessage error={errors.password_confirmation?.message} />
-          )}
-
           <FieldDescription>
             Enter your login credentials to login
           </FieldDescription>
         </Field>
-        <div className="flex flex-col w-full space-y-2">
-          <Button type={"submit"} disabled={isSubmitting}>
-            Sign Up
+        <div className="flex flex-col space-y-2">
+          <Button type="submit" disabled={isSubmitting}>
+            Reset Password
           </Button>
+
           <span className="border border-b-2"></span>
+
           <FieldDescription className="text-center">
-            Already have account ?
+            Go back to sign in
           </FieldDescription>
+
           <Link href={"/sign-in"}>
             <Button type="submit" disabled={isSubmitting} className="w-full">
               Sign In
@@ -122,4 +105,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default ResetPassword;

@@ -12,10 +12,10 @@ export const signUpSchema = z
     username: z.string(),
     email: z.string().email(),
     password: z.string().min(3, "Password must be at least 3 character long"),
-    confirmPassword: z.string().min(1, "Password must match"),
+    password_confirmation: z.string().min(1, "Password must match"),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.password_confirmation, {
     message: "Password must match!",
-    path: ["confirmPassword"],
+    path: ["password_confirmation"],
   });
 export type signUpSchemaType = z.infer<typeof signUpSchema>;

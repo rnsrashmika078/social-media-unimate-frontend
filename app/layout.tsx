@@ -1,20 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Roboto } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "./globals.css";
 import Theme from "@/components/custom/theme";
-import { store } from "./store/store";
 import { ReduxProvider } from "@/components/providers/reduxProvider";
 import QueryProvider from "./providers/queryClientProvider";
+import { ToastContainer } from "react-toastify";
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+// });
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -38,10 +37,10 @@ export default function RootLayout({
         // style={{ fontFamily: "var(--font-rubik)" }}
       >
         <QueryProvider>
-          <div className="flex w-screen h-screen">
-            <ReduxProvider>{children}</ReduxProvider>
-          </div>
-          <Theme />
+          <ReduxProvider>
+            <Theme />
+            <div className="flex w-screen h-screen">{children}</div>
+          </ReduxProvider>
         </QueryProvider>
       </body>
     </html>

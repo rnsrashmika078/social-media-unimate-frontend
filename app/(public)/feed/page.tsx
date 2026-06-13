@@ -1,7 +1,7 @@
 import Post from "@/components/main/Post";
 import React from "react";
 
-const page = () => {
+const FeedPage = () => {
   return (
     <>
       <Post />
@@ -10,4 +10,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default FeedPage;

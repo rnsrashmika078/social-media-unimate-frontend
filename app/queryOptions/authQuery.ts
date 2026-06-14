@@ -34,7 +34,7 @@ export function resetPasswordQuery() {
 }
 export function getAuthUserQuery() {
   return mutationOptions({
-    mutationKey: ["reset-password"],
+    mutationKey: ["auth-user"],
     mutationFn: getAuthUser,
   });
 }

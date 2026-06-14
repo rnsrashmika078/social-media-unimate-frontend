@@ -13,9 +13,6 @@ export async function POST() {
     },
   });
 
-  if (!res.ok) return;
-
   const result = await res.json();
-
   return NextResponse.json({ success: true, user: result });
 }

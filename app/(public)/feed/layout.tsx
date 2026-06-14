@@ -11,14 +11,14 @@ const FeedLayout = ({
   right: ReactNode;
 }) => {
   return (
-    <div className="w-full h-full justify-center items-center">
+    <div className="w-full min-h-screen flex flex-col">
       <NavBar />
-      <div className="flex w-full h-full justify-center items-center">
-        <div className="flex-1 w-full h-full bg-red-500">{left}</div>
-        <div className="lg:flex-2 flex-full w-full h-full overflow-y-auto">
+      <div className="flex w-full flex-1 min-h-0 justify-center items-start">
+        <div className="flex-1 min-w-0 h-full ">{left}</div>
+        <div className="lg:flex-[2] flex-auto min-w-0 h-full custom-scrollbar-y p-5">
           {children}
         </div>
-        <div className="flex-1 w-full h-full bg-green-500">{right}</div>
+        <div className="flex-1 min-w-0 h-full ">{right}</div>
       </div>
     </div>
   );

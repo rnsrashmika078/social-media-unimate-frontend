@@ -1,11 +1,10 @@
+import { getPosts } from "@/app/helper/posts";
 import Post from "@/components/main/Post";
-import React from "react";
-
-const FeedPage = () => {
+const FeedPage = async () => {
+  const posts = await getPosts();
   return (
     <>
-      <Post />
-      <Post />
+      <Post posts={posts} />
     </>
   );
 };

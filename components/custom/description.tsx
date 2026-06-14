@@ -1,17 +1,21 @@
-import React from "react";
+import { memo } from "react";
 import ReactMarkdown from "react-markdown";
 type DescriptionProp = {
-    desc?: string;
+  desc?: string;
 };
-const Description = ({ desc }: DescriptionProp) => {
-    const text = ` 
+const Description = memo(({ desc }: DescriptionProp) => {
+  const text = ` 
     Labrador  
     Burnese Mountain Dog`;
-    return (
-        <div className="w-full p-2">
-            <ReactMarkdown>{desc || text}</ReactMarkdown>
-        </div>
-    );
-};
+
+  console.log("Description.tsx: Rendering!");
+
+  return (
+    <div className="w-full p-2 text-sm">
+      <ReactMarkdown>{desc || text}</ReactMarkdown>
+    </div>
+  );
+})
+Description.displayName = "Description"
 
 export default Description;

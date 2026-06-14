@@ -51,9 +51,8 @@ const SignIn = () => {
       },
     );
   };
-
   return (
-    <div className="border rounded-2xl flex flex-col w-full p-5">
+    <div className="border rounded-2xl flex flex-col w-full p-5 bg-post-background select-none">
       <h1 className="text-2xl mb-4">Sign in</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Field className="mb-2">

@@ -5,6 +5,8 @@ import Theme from "@/components/custom/theme";
 import { ReduxProvider } from "@/components/providers/reduxProvider";
 import QueryProvider from "./providers/queryClientProvider";
 import { ToastContainer } from "react-toastify";
+import { AppContextProvider } from "./providers/appContext";
+import AuthSync from "@/components/custom/authSync";
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
 //   subsets: ["latin"],
@@ -31,15 +33,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${roboto.className} h-full antialiased`}>
+    <html lang="en" className={`${roboto.className} antialiased`}>
       <body
         className={` antialiased transition-all`}
         // style={{ fontFamily: "var(--font-rubik)" }}
       >
         <QueryProvider>
           <ReduxProvider>
-            <Theme />
-            <div className="flex w-screen h-screen">{children}</div>
+            <AppContextProvider>
+              <Theme />
+              <AuthSync />
+              <div className="flex min-w-screen h-screen">{children}</div>
+            </AppContextProvider>
           </ReduxProvider>
         </QueryProvider>
       </body>

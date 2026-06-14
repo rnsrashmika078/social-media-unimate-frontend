@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
 import DefaultImage from "@/public/images/background.png";
-import { ReactNode } from "react";
+import { memo, ReactNode } from "react";
 type CardProps = {
   title?: string;
   description?: string;
@@ -9,15 +9,17 @@ type CardProps = {
   image?: string;
   children?: ReactNode;
 };
-const Card = ({
+const Card = memo(({
   title,
   description,
   buttonText,
   image,
   children,
 }: CardProps) => {
+  console.log("Card.tsx: Rendering!");
+
   return (
-    <div className="relative flex w-full h-full items-center justify-center border shadow-md rounded-2xl">
+    <div className="relative flex w-full h-full items-center justify-center bg-black">
       {/* <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/0 to-black/70"></div> */}
       <Image
         src={image || DefaultImage}
@@ -39,6 +41,8 @@ const Card = ({
       </div>
     </div>
   );
-};
+})
+
+Card.displayName = "Card"
 
 export default Card;

@@ -50,10 +50,12 @@
   /* custom */
   --react-icon-color: var(--icon-color);
   --color-nav-color: var(--nav-color);
+  --color-active-tab: var(--active-tab);
+  --color-post-background: var(--post-background);
 }
 
 :root {
-  --background: oklch(1 0 0);
+  --background: oklch(94.309% 0.00011 271.152);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -89,6 +91,8 @@
   /* custom */
   --icon-color: oklch(0.556 0 0);
   --nav-color: oklch(87.61% 0.0001 271.152);
+  --active-tab: oklch(92.494% 0.00011 271.152);
+  --post-background: oklch(100% 0.00011 271.152);
 }
 
 .dark {
@@ -127,6 +131,8 @@
   /* custom */
   --icon-color: oklch(0.556 0 0);
   --nav-color: oklch(19.574% 0.00002 271.152);
+  --active-tab: oklch(26.139% 0.00148 16.148);
+  --post-background: oklch(13.441% 0.00002 271.152);
 }
 
 @layer base {
@@ -139,4 +145,10 @@
   html {
     @apply font-sans;
   }
+}
+.custom-scrollbar-y {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #474747 #1e1e1e;
 }

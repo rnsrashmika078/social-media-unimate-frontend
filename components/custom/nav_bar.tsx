@@ -1,15 +1,42 @@
+"use client";
+import { useAppContext } from "@/app/providers/appContext";
 import { Input } from "../ui/input";
 import { SearchIcon } from "lucide-react";
 import {
   AiOutlineHome,
+  AiOutlineLogout,
   AiOutlineMessage,
   AiOutlineNotification,
   AiOutlineSlackSquare,
 } from "react-icons/ai";
+import { useMutation } from "@tanstack/react-query";
+import { signOutQuery } from "@/app/queryOptions/authQuery";
+import { FaUserCircle } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import Image from "next/image";
+import { memo } from "react";
+import Badge from "./badge";
+import { useRouter } from "next/navigation";
+const NavBar = memo(() => {
+  const { setActiveTab, activeTab } = useAppContext();
+  const tabs = [
+    { name: "Home", icon: AiOutlineHome, route: "/feed" },
+    { name: "Messaging", icon: AiOutlineMessage, route: "/messaging" },
+    {
+      name: "Notification",
+      icon: AiOutlineNotification,
+      route: "notification",
+    },
+    { name: "Logout", icon: AiOutlineLogout, route: "" },
+  ];
 
-const NavBar = () => {
+  const router = useRouter();
+
+  const { mutate: signOut } = useMutation(signOutQuery());
+  const authUser = useSelector((store: RootState) => store.auth.authUser);
   return (
-    <div className="p-4 flex w-full items-center justify-evenly bg-nav-color shadow-xl">
+    <div className=" flex sticky top-0 w-full items-center justify-evenly bg-nav-color shadow-xl select-none">
       <div className="flex gap-5">
         <AiOutlineSlackSquare
           className="text-icon-color rounded-2xl"
@@ -27,22 +54,39 @@ const NavBar = () => {
         </div>
       </div>
 
-      <div className="flex gap-10 p-2  text-center items-center justify-center text-xs">
-        <span className="flex flex-col items-center">
-          <AiOutlineHome size={25} />
-          <p>Home</p>
-        </span>
-        <span className="flex flex-col items-center">
-          <AiOutlineMessage size={25} />
-          <p>Messaging</p>
-        </span>
-        <span className="flex flex-col items-center">
-          <AiOutlineNotification size={25} />
-          <p>Notification</p>
-        </span>
+      <div className="flex gap-5 p-2  text-center items-center justify-center text-xs">
+        {tabs.map((t, idx) => {
+          const Icon = t.icon;
+          return (
+            <div key={idx}>
+              <span
+                className={`flex flex-col items-center cursor-pointer ${activeTab === t.name ? "bg-active-tab" : ""} px-2 py-2 rounded-xl transition-all`}
+                onClick={() => {
+                  if (t.name.toLowerCase() === "logout") {
+                    signOut();
+                  }
+                  router.push(t.route);
+                  setActiveTab(t.name);
+                }}
+              >
+                <Icon size={25} />
+                <p>{t.name}</p>
+              </span>
+            </div>
+          );
+        })}
       </div>
+      <Badge
+        dp={authUser?.dp}
+        onClick={() => {
+          setActiveTab("profile");
+          router.push(`/profile/${authUser?.id}`);
+        }}
+      />
     </div>
   );
-};
+});
+
+NavBar.displayName = "NavBar";
 
 export default NavBar;

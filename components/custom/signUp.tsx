@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/store/store";
 import { setAuthUser } from "@/app/store/authSlice";
+import { useState } from "react";
 
 // component
 const SignUp = () => {
@@ -32,8 +33,12 @@ const SignUp = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const onSubmit = async (data: signUpSchemaType) => {
+    const url = await uploadImage();
     mutate(
       {
+        dp: url,
+        firstname: data.firstname,
+        lastname: data.lastname,
         username: data.username,
         email: data.email,
         password: data.password,
@@ -54,11 +59,55 @@ const SignUp = () => {
     reset();
   };
 
+  const [file, setFile] = useState<File | null>(null);
+
+  const uploadImage = async () => {
+    if (!file) return;
+    const res = await fetch("/api/upload");
+    const { url } = await res.json();
+
+    await fetch(url, {
+      method: "PUT",
+      headers: {
+        "x-ms-blob-type": "BlockBlob",
+        "Content-Type": file.type,
+      },
+      body: file,
+    });
+
+    const imageUrl = url.split("?")[0];
+    return imageUrl;
+  };
   return (
-    <div className="border rounded-2xl flex flex-col w-full p-5">
+    <div className="border rounded-2xl  flex-col w-full p-5 bg-post-background select-none ">
       <h1 className="text-2xl mb-4">Sign up</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Field className="mb-2">
+        <Field className="mb-2 grid grid-cols-2">
+          <FieldLabel htmlFor="input-field-profile-image">
+            Profile Image
+          </FieldLabel>
+          <Input
+            type="file"
+            onChange={(e) => setFile(e.target.files?.[0] || null)}
+          />
+          <FieldLabel htmlFor="input-field-firstname">Profile Image</FieldLabel>
+          <Input
+            {...register("firstname")}
+            id="input-field-firstname"
+            type="text"
+            className="p-5 mb-2"
+            placeholder="Enter your firstname"
+          />
+          {errors.username && <ErrorMessage error={errors.lastname?.message} />}
+          <FieldLabel htmlFor="input-field-lastname">Lastname</FieldLabel>
+          <Input
+            {...register("lastname")}
+            id="input-field-lastname"
+            type="text"
+            className="p-5 mb-2"
+            placeholder="Enter your lastname"
+          />
+          {errors.username && <ErrorMessage error={errors.lastname?.message} />}
           <FieldLabel htmlFor="input-field-username">Username</FieldLabel>
           <Input
             {...register("username")}

@@ -27,3 +27,11 @@ export const commentSchema = z.object({
 });
 
 export type commentSchemaType = z.infer<typeof commentSchema>;
+
+export const addPostSchema = z.object({
+  content: z.string(),
+  
+  
+});
+
+export type addPostSchemaType = z.infer<typeof addPostSchema>;

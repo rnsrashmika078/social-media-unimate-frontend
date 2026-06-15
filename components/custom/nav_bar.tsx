@@ -11,10 +11,8 @@ import {
 } from "react-icons/ai";
 import { useMutation } from "@tanstack/react-query";
 import { signOutQuery } from "@/app/queryOptions/authQuery";
-import { FaUserCircle } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
-import Image from "next/image";
 import { memo } from "react";
 import Badge from "./badge";
 import { useRouter } from "next/navigation";
@@ -61,9 +59,14 @@ const NavBar = memo(() => {
             <div key={idx}>
               <span
                 className={`flex flex-col items-center cursor-pointer ${activeTab === t.name ? "bg-active-tab" : ""} px-2 py-2 rounded-xl transition-all`}
-                onClick={() => {
+                onClick={async () => {
                   if (t.name.toLowerCase() === "logout") {
-                    signOut();
+                    await signOut(undefined, {
+                      onSuccess: () => {
+                        router.push("/sign-in");
+                      },
+                    });
+                    return;
                   }
                   router.push(t.route);
                   setActiveTab(t.name);

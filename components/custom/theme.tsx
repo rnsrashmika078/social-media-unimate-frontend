@@ -22,7 +22,7 @@ const Theme = () => {
       onClick={() => setIsDark((prev) => !prev)}
     >
       <ToastContainer
-        position="top-right"
+        position="bottom-right"
         theme={isDark ? "dark" : "light"}
       ></ToastContainer>
       {isDark ? <Sun /> : <Moon />}

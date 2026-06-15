@@ -8,7 +8,7 @@ import {
 export async function GET() {
   const accountName = process.env.AZURE_STORAGE_ACCOUNT!;
   const accountKey = process.env.AZURE_STORAGE_KEY!;
-  const containerName = "social-media-container";
+  const containerName = "socialmediablobcontainer";
 
   const credential = new StorageSharedKeyCredential(accountName, accountKey);
 

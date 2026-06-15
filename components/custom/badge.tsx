@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import { FaUserCircle } from "react-icons/fa";
@@ -10,7 +11,8 @@ const Badge = ({ dp, onClick }: BadgeProps) => {
   return (
     <div onClick={() => onClick?.()}>
       {dp && dp ? (
-        <Image
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
           src={dp}
           alt="display picture"
           width={48}

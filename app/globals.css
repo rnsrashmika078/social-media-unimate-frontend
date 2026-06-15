@@ -52,6 +52,7 @@
   --color-nav-color: var(--nav-color);
   --color-active-tab: var(--active-tab);
   --color-post-background: var(--post-background);
+  --color-feed-background: var(--feed-background);
 }
 
 :root {
@@ -93,6 +94,7 @@
   --nav-color: oklch(87.61% 0.0001 271.152);
   --active-tab: oklch(92.494% 0.00011 271.152);
   --post-background: oklch(100% 0.00011 271.152);
+  --feed-background: oklch(100% 0.00011 271.152);
 }
 
 .dark {
@@ -133,6 +135,7 @@
   --nav-color: oklch(19.574% 0.00002 271.152);
   --active-tab: oklch(26.139% 0.00148 16.148);
   --post-background: oklch(13.441% 0.00002 271.152);
+  --feed-background: oklch(23.929% 0.00003 271.152);
 }
 
 @layer base {

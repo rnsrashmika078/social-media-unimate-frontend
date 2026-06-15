@@ -10,6 +10,9 @@ export type ContextType = {
 
   commentCount: number;
   setCommentCount: React.Dispatch<React.SetStateAction<number>>;
+
+  isModelOpen: boolean;
+  setIsModelOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const AppContext = createContext<ContextType | null>(null);
@@ -17,6 +20,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [activeTab, setActiveTab] = useState<string>("Home");
   const [likeCount, setLikeCount] = useState<number>(0);
   const [commentCount, setCommentCount] = useState<number>(0);
+  const [isModelOpen, setIsModelOpen] = useState<boolean>(false);
 
   const value = useMemo(
     () => ({
@@ -25,10 +29,14 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
 
       likeCount,
       setLikeCount,
+
       commentCount,
       setCommentCount,
+
+      isModelOpen,
+      setIsModelOpen,
     }),
-    [activeTab, commentCount, likeCount],
+    [activeTab, commentCount, isModelOpen, likeCount],
   );
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };

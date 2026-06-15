@@ -5,7 +5,10 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "randomuser.me" },
-      { protocol: "https", hostname: "socialmedia123.blob.core.windows.net" },
+      {
+        protocol: "https",
+        hostname: "socialmediastorage1.blob.core.windows.net",
+      },
     ],
   },
 };

@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/store/store";
 import { setAuthUser } from "@/app/store/authSlice";
 import { useState } from "react";
+import { uploadImage } from "@/app/helper/posts";
 
 // component
 const SignUp = () => {
@@ -33,7 +34,7 @@ const SignUp = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const onSubmit = async (data: signUpSchemaType) => {
-    const url = await uploadImage();
+    const url = await uploadImage(file);
     mutate(
       {
         dp: url,
@@ -61,23 +62,6 @@ const SignUp = () => {
 
   const [file, setFile] = useState<File | null>(null);
 
-  const uploadImage = async () => {
-    if (!file) return;
-    const res = await fetch("/api/upload");
-    const { url } = await res.json();
-
-    await fetch(url, {
-      method: "PUT",
-      headers: {
-        "x-ms-blob-type": "BlockBlob",
-        "Content-Type": file.type,
-      },
-      body: file,
-    });
-
-    const imageUrl = url.split("?")[0];
-    return imageUrl;
-  };
   return (
     <div className="border rounded-2xl  flex-col w-full p-5 bg-post-background select-none ">
       <h1 className="text-2xl mb-4">Sign up</h1>

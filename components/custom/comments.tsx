@@ -93,7 +93,7 @@ const CommentSection = memo(({ postId }: CommentSectionProps) => {
             comment={c.comment}
             date={c.created_at}
             datePosition={"bottom"}
-            username={c.user.username}
+            username={c.user.firstname + " " + c.user.lastname}
             profileImage={c.user.dp}
             settings={false}
           />

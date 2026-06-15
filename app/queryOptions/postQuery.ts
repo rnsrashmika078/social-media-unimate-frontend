@@ -1,5 +1,5 @@
 import { mutationOptions, queryOptions } from "@tanstack/react-query";
-import { addComment, addLike, getPostComments } from "../helper/posts";
+import { addComment, addLike, addPost, getPostComments } from "../helper/posts";
 import { CommentType } from "../types/globalTypes";
 
 // get post done inside server
@@ -19,5 +19,11 @@ export function addLikeQuery() {
   return mutationOptions({
     mutationKey: ["like"],
     mutationFn: addLike,
+  });
+}
+export function addPostQuery() {
+  return mutationOptions({
+    mutationKey: ["addPosts"],
+    mutationFn: addPost,
   });
 }

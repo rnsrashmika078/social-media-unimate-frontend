@@ -28,8 +28,8 @@ const UserPlate = memo(
     return (
       <div className="flex items-center justify-between gap-5  w-full">
         <div className="flex gap-3 items-center">
-          <Image
-            src={profileImage || Vercel}
+          <img
+            src={profileImage}
             alt={"profile_image"}
             width={50}
             height={50}
@@ -41,7 +41,7 @@ const UserPlate = memo(
               <p className="text-xs text-gray-400">10:25 AM</p>
             )}
             <h1 className="text-md font-bold text-black dark:text-white ">
-              {username ?? "Username goes here"}
+              {username ?? ""}
             </h1>
             <p className="text-sm  text-gray-400">{jobTitle ?? ""}</p>
             {date && datePosition === "middle" && (

@@ -97,7 +97,7 @@ const SignIn = () => {
           </FieldDescription>
 
           <Link href={"/sign-up"}>
-            <Button type="submit" disabled={isSubmitting} className="w-full">
+            <Button type="button" disabled={isSubmitting} className="w-full">
               Sign Up
             </Button>
           </Link>

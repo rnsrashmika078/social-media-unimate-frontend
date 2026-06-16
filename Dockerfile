@@ -4,6 +4,7 @@ FROM oven/bun:latest
 WORKDIR /app
 
 #directory
+#
 
 ENV NODE_ENV=production
 

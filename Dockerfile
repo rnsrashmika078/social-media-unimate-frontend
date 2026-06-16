@@ -4,7 +4,7 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-COPY package.json package-lock.json ./
+COPY package.json bun.lock ./
 RUN bun install --omit=dev
 
 COPY .next ./.next

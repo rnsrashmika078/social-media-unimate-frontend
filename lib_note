@@ -1,2 +1,4 @@
 @tanstack/react-query
 axios
+
+redux

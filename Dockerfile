@@ -7,6 +7,8 @@ WORKDIR /app
 #
 
 ENV NODE_ENV=production
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
 COPY package.json bun.lock ./
 RUN bun install --omit=dev

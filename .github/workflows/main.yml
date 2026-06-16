@@ -59,4 +59,9 @@ jobs:
             docker stop next_app || true
             docker rm next_app || true
             docker load < next-app.tar
-            docker run -d -p 3000:3000 --name next_app next-app
+            docker run -d \
+              -p 3000:3000 \
+              --name next_app \
+              -e NEXT_PUBLIC_API_URL=http://40.81.238.93:8000/api/v1 \
+              next-app
+                        

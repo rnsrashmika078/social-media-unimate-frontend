@@ -3,7 +3,7 @@ import axios from "axios";
 const URI = process.env.NEXT_PUBLIC_API_URL!;
 export const getPosts = async () => {
   try {
-    const res = await axios.get(`${URI}/post/`, {});
+    const res = await axios.get(`${URI}/post`, {});
     return res.data.post ?? [];
   } catch (err) {}
 };

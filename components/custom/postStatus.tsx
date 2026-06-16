@@ -7,22 +7,23 @@ interface PostStatusProps {
   commentCount: number;
 }
 const PostStatus = ({ likeCount, commentCount }: PostStatusProps) => {
-  const {
-    setLikeCount,
-    setCommentCount,
-    commentCount: comCount,
-    likeCount: liCount,
-  } = useAppContext();
+  // const {
+  //   setLikeCount,
+  //   setCommentCount,
+  //   commentCount: comCount,
+  //   likeCount: liCount,
+  // } = useAppContext();
 
-  useEffect(() => {
-    setLikeCount(likeCount);
-    setCommentCount(commentCount);
-  }, []);
+  // useEffect(() => {
+  //   setLikeCount(likeCount);
+  //   setCommentCount(commentCount);
+  // }, []);
 
   return (
     <div className="flex justify-between px-5 py-2">
-      {liCount !== 0 && <p>{liCount} likes</p>}
-      {comCount !== 0 && <p>{comCount} comments</p>}
+      {/* {liCount !== 0 && <p>{liCount} likes</p>} */}
+      {likeCount} LIKES
+      {/* {comCount !== 0 && <p>{comCount} comments</p>} */}
     </div>
   );
 };

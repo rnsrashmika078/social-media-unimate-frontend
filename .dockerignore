@@ -1,0 +1,5 @@
+node_modules
+.next
+.git
+Dockerfile
+next-app.tar

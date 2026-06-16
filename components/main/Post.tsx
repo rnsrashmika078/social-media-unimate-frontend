@@ -14,6 +14,7 @@ const Post = memo(({ posts }: PostsType) => {
 
   return (
     <div className="">
+      
       {posts && posts.length > 0 ? (
         posts.map((p) => (
           <div

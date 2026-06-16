@@ -2,6 +2,8 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST() {
+  console.log("🔥 authUser HIT");
+
   // const cookieStore = cookies();
   // const token = (await cookieStore).get("token")?.value;
 
@@ -14,8 +16,8 @@ export async function POST() {
   // });
 
   // const result = await res.json();
-  const result = {
-    name: "Rashmika",
-  };
-  return NextResponse.json({ success: true, user: result });
+  return NextResponse.json({
+    success: true,
+    user: { name: "Rashmika" },
+  });
 }

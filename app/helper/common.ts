@@ -17,17 +17,17 @@ export const convertDateTime = (date: string) => {
   const postedMonth = new Date(date).getMonth();
   const dayToModify = new Date(date);
 
-  if (thisDay > postedDay)
-    return dayToModify.toLocaleDateString("en-GB", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  return dayToModify.toLocaleDateString("en-GB", {
+  if (thisDay >= postedDay || thisMonth >= postedMonth) {
+    const hour = dayToModify.getUTCHours();
+    const min = String(dayToModify.getUTCMinutes()).padStart(2, "0");
+    return `Today at ${hour}:${min}`;
+  }
+  return dayToModify.toLocaleString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
   });
 };
 

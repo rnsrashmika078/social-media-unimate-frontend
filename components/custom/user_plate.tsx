@@ -24,7 +24,6 @@ const UserPlate = memo(
     date,
     settings = true,
   }: UserPlateProps) => {
-    console.log("UserPlate.tsx: Rendering!");
 
     return (
       <div className="flex items-center justify-between gap-5  w-full select-none">

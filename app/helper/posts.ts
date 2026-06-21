@@ -1,14 +1,19 @@
 import axios from "axios";
 
 const URI = process.env.NEXT_PUBLIC_API_URL!;
-export const getPosts = async () => {
+export const getPosts = async ({ page = 1 }) => {
   try {
-    const res = await axios.get(`${URI}/post`, {});
-    return res.data.post ?? [];
+    const res = await axios.get(`${URI}/post?page=${page}`, {});
+    return res.data ?? [];
   } catch (err) {}
 };
 export const getPostComments = async (data: { post_id: number }) => {
   const res = await axios.get(`${URI}/post/comment/${data.post_id}`, {});
+
+  return res.data.comments ?? [];
+};
+export const getPostLikes = async (data: { post_id: number }) => {
+  const res = await axios.get(`${URI}/post/like/${data.post_id}`, {});
 
   return res.data.comments ?? [];
 };
@@ -46,10 +51,8 @@ export const addPost = async (data: {
   user_id: number;
   content: string;
   attachment: string;
-  likes_count: number;
-  comments_count: number;
 }) => {
-  const res = await axios.post(`${URI}/post/`, data, {
+  const res = await axios.post(`${URI}/post/add`, data, {
     headers: {
       Accept: "application/json",
     },

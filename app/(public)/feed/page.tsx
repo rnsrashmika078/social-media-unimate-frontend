@@ -1,12 +1,28 @@
 import { getPosts } from "@/app/helper/posts";
 import AddPost from "@/components/main/AddPost";
 import Post from "@/components/main/Post";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 const FeedPage = async () => {
-  const posts = await getPosts();
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchInfiniteQuery({
+    queryKey: ["getPosts"],
+    queryFn: ({ pageParam = 1 }) => getPosts({ page: pageParam }),
+    initialPageParam: 1,
+  });
+
+  const dehydratedState = dehydrate(queryClient);
+
   return (
     <>
-      <AddPost />
-      <Post posts={posts} />
+      <HydrationBoundary state={dehydratedState}>
+        <AddPost />
+        <Post />
+      </HydrationBoundary>
     </>
   );
 };

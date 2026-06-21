@@ -19,6 +19,9 @@ export type PostType = {
   user: AuthUserType; // whose posted
   comments_count: number;
   liked_by_users_count: number;
+  liked_by_users: {
+    id: number;
+  }[];
 };
 
 export type CommentType = {

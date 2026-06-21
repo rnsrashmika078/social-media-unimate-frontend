@@ -1,0 +1,95 @@
+import { HumanMessage } from "langchain";
+import { NextResponse } from "next/server";
+import { createAgent } from "langchain";
+import { MemorySaver } from "@langchain/langgraph";
+import { llm } from "@/app/agents/model/languageModel";
+import { primaryTools } from "@/app/agents/tool/primaryTools";
+import z from "zod";
+const checkpointer = new MemorySaver();
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const { messages } = body.input;
+
+    const imageUrl = messages[1].url;
+
+    const input = {
+      messages: [
+        new HumanMessage({
+          content: [{ type: "text", text: messages[0].content }],
+        }),
+      ],
+    };
+
+    const config = body.config;
+    const mainAgent = createAgent({
+      // @ts-expect-error: ts error
+      model: llm,
+      tools: primaryTools,
+      temperature: 1,
+      systemPrompt: !imageUrl
+        ? `
+Write social media post.
+
+- Human tone, match user
+- Hook + short content + optional hashtags
+- Continue naturally if needed
+- Use emojis
+- Safe content only
+- If image doesn't match topic, ignore image and write for topic
+
+OUTPUT:
+- Only post text
+- No quotes, no code blocks, no explanations
+- use markdown format
+`
+        : `
+Generate social media post from image.
+Run ImageDescriber tool with: ${imageUrl}
+
+- Human tone, match user
+- Hook + short content + optional hashtags
+- Continue naturally if needed
+- Use emojis
+- Safe content only
+- If image doesn't match topic, ignore image and write for topic
+
+OUTPUT:
+- Only post text
+- No quotes, no code blocks, no explanations
+- use markdown format
+
+`,
+      checkpointer,
+    });
+
+    const stream = await mainAgent.stream(input, {
+      ...config,
+      encoding: "text/event-stream",
+      streamMode: [
+        // "updates",
+        "messages",
+        // "values",
+        // "checkpoints",
+        // "tools",
+        // "custom",
+      ],
+      recursionLimit: 6,
+    });
+
+    return new Response(stream, {
+      headers: { "Content-Type": "text/event-stream" },
+    });
+  } catch (e) {
+    return NextResponse.json(
+      {
+        error:
+          e instanceof Error
+            ? e.message
+            : "An error occurred while processing the request.",
+      },
+      { status: 500 },
+    );
+  }
+}

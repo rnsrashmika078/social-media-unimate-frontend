@@ -2,8 +2,9 @@
 import Vercel from "@/public/images/profile.png";
 import Image from "next/image";
 import { EllipsisVertical } from "lucide-react";
-import { Input } from "../ui/input";
 import { memo } from "react";
+import DefaultProfileImage from "@/public/images/profile.png";
+import { convertDateTime } from "@/app/helper/common";
 type UserPlateProps = {
   profileImage?: string;
   username?: string;
@@ -26,10 +27,10 @@ const UserPlate = memo(
     console.log("UserPlate.tsx: Rendering!");
 
     return (
-      <div className="flex items-center justify-between gap-5  w-full">
+      <div className="flex items-center justify-between gap-5  w-full select-none">
         <div className="flex gap-3 items-center">
           <img
-            src={profileImage}
+            src={profileImage ?? DefaultProfileImage.src}
             alt={"profile_image"}
             width={50}
             height={50}
@@ -38,18 +39,19 @@ const UserPlate = memo(
           />
           <div>
             {date && datePosition === "top" && (
-              <p className="text-xs text-gray-400">10:25 AM</p>
+              <p className="text-xs text-gray-400">{convertDateTime(date)}</p>
             )}
             <h1 className="text-md font-bold text-black dark:text-white ">
               {username ?? ""}
             </h1>
-            <p className="text-sm  text-gray-400">{jobTitle ?? ""}</p>
+            {jobTitle && <p className="text-sm  text-gray-400">{jobTitle}</p>}
+
             {date && datePosition === "middle" && (
-              <p className="text-xs text-gray-400">10:25 AM</p>
+              <p className="text-xs text-gray-400">{convertDateTime(date)}</p>
             )}
             <p>{comment ?? ""}</p>
             {date && datePosition === "bottom" && (
-              <p className="text-xs text-gray-400">10:25 AM</p>
+              <p className="text-xs text-gray-400">{convertDateTime(date)}</p>
             )}
           </div>
         </div>

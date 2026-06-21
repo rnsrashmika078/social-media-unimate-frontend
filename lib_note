@@ -1,4 +1,4 @@
 @tanstack/react-query
 axios
-
+@langchain/groq @langchain/core
 redux

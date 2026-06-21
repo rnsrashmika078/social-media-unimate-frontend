@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { memo } from "react";
-import { useAppContext } from "@/app/providers/appContext";
+import { IoMdSend } from "react-icons/io";
 interface CommentSectionProps {
   postId: number;
 }
@@ -37,8 +37,6 @@ const CommentSection = memo(({ postId }: CommentSectionProps) => {
   const { mutate: addComment } = useMutation(addCommentsQuery());
   const authUser = useSelector((store: RootState) => store.auth.authUser);
 
-  const { setCommentCount } = useAppContext();
-
   // form submition
   const addCommentSubmit = async (data: commentSchemaType) => {
     if (!authUser?.id) {
@@ -58,35 +56,19 @@ const CommentSection = memo(({ postId }: CommentSectionProps) => {
         onSuccess: (data) => {
           toast.success(data.message);
           queryClient.invalidateQueries({
+            queryKey: ["getPosts"],
+          });
+          queryClient.invalidateQueries({
             queryKey: ["comments", postId],
           });
-          setCommentCount((prev) => prev + 1);
         },
       },
     );
   };
 
   return (
-    <div>
-      {`Comments (${comments.length})`}
-      <div className="items-end gap-2 w-full mt-2">
-        <form onSubmit={handleSubmit(addCommentSubmit)}>
-          <Input
-            {...register("comment")}
-            id="input-field-add-comment"
-            type="text"
-            className="p-5 pl-10 mt-2 mb-2 border border-gray-400 w-full "
-            placeholder="Add your comment"
-          />
-
-          <div>
-            <Button type="submit">Add</Button>
-            <Button>Cancel</Button>
-          </div>
-        </form>
-      </div>
-
-      {/* <SearchIcon className="absolute top-1/2 text-icon-color -translate-y-1/2 left-2" /> */}
+    <>
+      <hr className="mt-4 mb-4" />
       {comments?.map((c) => (
         <div key={c.id}>
           <UserPlate
@@ -99,7 +81,24 @@ const CommentSection = memo(({ postId }: CommentSectionProps) => {
           />
         </div>
       ))}
-    </div>
+      <hr className="mt-4 mb-4" />
+
+      <div className="flex w-full mt-2 sticky -bottom-5 bg-post-background py-2">
+        <form onSubmit={handleSubmit(addCommentSubmit)} className="w-full flex items-center gap-2">
+          <Input
+            {...register("comment")}
+            id="input-field-add-comment"
+            type="text"
+            className="flex p-5 pl-10 mt-2 mb-2 border border-gray-400 w-full "
+            placeholder="Add your comment"
+          />
+
+          <Button type="submit" className="p-5">
+            <IoMdSend size={50}/>
+          </Button>
+        </form>
+      </div>
+    </>
   );
 });
 

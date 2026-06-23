@@ -8,7 +8,6 @@ RUN bun install --omit=dev
 
 COPY .next ./.next
 COPY public ./public
-COPY .env.local ./ 
 
 
 EXPOSE 3000

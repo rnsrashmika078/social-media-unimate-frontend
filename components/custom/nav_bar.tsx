@@ -5,7 +5,6 @@ import { SearchIcon } from "lucide-react";
 import {
   AiOutlineHome,
   AiOutlineLogout,
-  AiOutlineMessage,
   AiOutlineNotification,
   AiOutlineSlackSquare,
 } from "react-icons/ai";

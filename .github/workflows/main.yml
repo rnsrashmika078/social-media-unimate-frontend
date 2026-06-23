@@ -10,43 +10,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Get code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Setup Node
-     # 2. Setup Bun
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
-      # 3. Install dependencies
       - name: Install dependencies
         run: bun install
 
-      - name: Create .env.local
-        run: |
-          cat > .env.local << EOF
-          NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
-          DATABASE_URL=${{ secrets.DATABASE_URL }}
-          API_SECRET=${{ secrets.API_SECRET }}
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          EOF
-
-      # 4. Build Next.js app
       - name: Build Next.js
         run: bun run build
 
-      # 5. Build Docker image
       - name: Build Docker Image
         run: docker build -t next-app .
 
-      # 6. Save image
       - name: Save Docker image
         run: docker save next-app > next-app.tar
 
-      # 7. Copy to VM
       - name: Copy to VM
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -56,7 +39,6 @@ jobs:
           source: "next-app.tar"
           target: "/home/Rashmika/app"
 
-      # 8. Run on VM
       - name: Deploy on VM
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -65,12 +47,17 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
             cd /home/Rashmika/app
+
             docker stop next_app || true
             docker rm next_app || true
+
             docker load < next-app.tar
+
             docker run -d \
               -p 3000:3000 \
               --name next_app \
               -e NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} \
+              -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
+              -e API_SECRET=${{ secrets.API_SECRET }} \
+              -e GROQ_API_KEY=${{ secrets.GROQ_API_KEY }} \
               next-app
-                        

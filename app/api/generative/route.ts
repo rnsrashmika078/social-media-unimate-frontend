@@ -4,7 +4,6 @@ import { createAgent } from "langchain";
 import { MemorySaver } from "@langchain/langgraph";
 import { llm } from "@/app/agents/model/languageModel";
 import { primaryTools } from "@/app/agents/tool/primaryTools";
-import z from "zod";
 const checkpointer = new MemorySaver();
 
 export async function POST(req: Request) {
@@ -24,10 +23,8 @@ export async function POST(req: Request) {
 
     const config = body.config;
     const mainAgent = createAgent({
-      // @ts-expect-error: ts error
       model: llm,
       tools: primaryTools,
-      temperature: 1,
       systemPrompt: !imageUrl
         ? `
 Write social media post.

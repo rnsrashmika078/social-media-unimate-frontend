@@ -25,6 +25,14 @@ jobs:
       - name: Install dependencies
         run: bun install
 
+      - name: Create .env.local
+        run: |
+          cat > .env.local << EOF
+          NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
+          DATABASE_URL=${{ secrets.DATABASE_URL }}
+          API_SECRET=${{ secrets.API_SECRET }}
+          EOF
+
       # 4. Build Next.js app
       - name: Build Next.js
         run: bun run build

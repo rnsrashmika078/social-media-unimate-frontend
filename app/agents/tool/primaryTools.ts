@@ -1,6 +1,5 @@
 import { createAgent, HumanMessage, tool } from "langchain";
 import z from "zod";
-import { imageModel } from "@/app/agents/model/languageModel";
 import { ChatGroq } from "@langchain/groq";
 
 export const ImageDescriber = tool(

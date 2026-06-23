@@ -2,7 +2,7 @@ import { HumanMessage } from "langchain";
 import { NextResponse } from "next/server";
 import { createAgent } from "langchain";
 import { MemorySaver } from "@langchain/langgraph";
-import { llm } from "@/app/agents/model/languageModel";
+
 import { primaryTools } from "@/app/agents/tool/primaryTools";
 import { ChatGroq } from "@langchain/groq";
 const checkpointer = new MemorySaver();

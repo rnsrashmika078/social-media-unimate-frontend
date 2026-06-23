@@ -1,13 +1,7 @@
 import { ReactNode } from "react";
 import NavBar from "@/components/custom/nav_bar";
 
-const FeedLayout = ({
-  children,
-}: {
-  children: ReactNode;
-  left: ReactNode;
-  right: ReactNode;
-}) => {
+const FeedLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="w-full min-h-screen flex flex-col ">
       <NavBar />

@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+
+
 import { HumanMessage } from "langchain";
 import { NextResponse } from "next/server";
 import { createAgent } from "langchain";

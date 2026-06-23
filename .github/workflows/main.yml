@@ -57,7 +57,5 @@ jobs:
               -p 3000:3000 \
               --name next_app \
               -e NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} \
-              -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
-              -e API_SECRET=${{ secrets.API_SECRET }} \
               -e GROQ_API_KEY=${{ secrets.GROQ_API_KEY }} \
               next-app

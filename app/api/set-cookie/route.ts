@@ -14,6 +14,6 @@ export async function POST(request: NextRequest) {
   //   success: true,
   // });
   const baseURL = process.env.NEXT_PUBLIC_API_URL!;
-  return NextResponse.redirect(new URL("/feed", baseURL));
+  return NextResponse.redirect(new URL("/feed", "http://20.207.201.226:3000"));
   // non prod request.nextUrl
 }

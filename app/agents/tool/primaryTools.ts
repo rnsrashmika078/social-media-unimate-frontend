@@ -1,4 +1,4 @@
-import { createAgent, HumanMessage, tool, ToolRuntime } from "langchain";
+import { createAgent, HumanMessage, tool } from "langchain";
 import z from "zod";
 import { imageModel } from "@/app/agents/model/languageModel";
 
@@ -25,9 +25,7 @@ export const ImageDescriber = tool(
         ],
       };
       const mainAgent = createAgent({
-        // @ts-expect-error: ts error
         model: imageModel,
-        recursionLimit: 3,
       });
 
       const result = await mainAgent.invoke(input);

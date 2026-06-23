@@ -1,11 +1,10 @@
-
-
 import { HumanMessage } from "langchain";
 import { NextResponse } from "next/server";
 import { createAgent } from "langchain";
 import { MemorySaver } from "@langchain/langgraph";
 import { llm } from "@/app/agents/model/languageModel";
 import { primaryTools } from "@/app/agents/tool/primaryTools";
+import { ChatGroq } from "@langchain/groq";
 const checkpointer = new MemorySaver();
 
 export async function POST(req: Request) {
@@ -14,6 +13,15 @@ export async function POST(req: Request) {
     const { messages } = body.input;
 
     const imageUrl = messages[1].url;
+
+    const llm = new ChatGroq({
+      apiKey: "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",
+      // apiKey: process.env.GROQ_API_KEY,
+      // model: "meta-llama/llama-4-scout-17b-16e-instruct",
+      model: "llama-3.3-70b-versatile",
+      // maxTokens: 500,
+      // maxRetries: 2,
+    });
 
     const input = {
       messages: [

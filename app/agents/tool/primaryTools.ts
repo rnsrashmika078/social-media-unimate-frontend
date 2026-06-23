@@ -1,6 +1,7 @@
 import { createAgent, HumanMessage, tool } from "langchain";
 import z from "zod";
 import { imageModel } from "@/app/agents/model/languageModel";
+import { ChatGroq } from "@langchain/groq";
 
 export const ImageDescriber = tool(
   async ({ topic, image_url }: { image_url: string; topic: string }) => {
@@ -24,6 +25,13 @@ export const ImageDescriber = tool(
           }),
         ],
       };
+      const imageModel = new ChatGroq({
+        apiKey: "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",
+
+        model: "meta-llama/llama-4-scout-17b-16e-instruct",
+        // model: "llama-3.3-70b-versatile",
+        // maxTokens: 500,
+      });
       const mainAgent = createAgent({
         model: imageModel,
       });

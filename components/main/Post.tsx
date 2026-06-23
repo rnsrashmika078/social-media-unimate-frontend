@@ -11,7 +11,7 @@ import { getPosts } from "@/app/helper/posts";
 import { useInView } from "framer-motion";
 import Spinner from "../custom/spinner";
 
-const Post = memo(() => {
+const Post = memo(({ posts }: { posts: PostType[] }) => {
   console.log("Post.tsx: Rendering!");
 
   const infiniteScroll = useRef<HTMLDivElement | null>(null);
@@ -22,16 +22,30 @@ const Post = memo(() => {
       queryKey: ["getPosts"],
       queryFn: ({ pageParam = 1 }) => getPosts({ page: pageParam }),
       initialPageParam: 1,
-      // enabled: false,
+
+      initialData: {
+        pages: [
+          {
+            data: posts,
+            currentPage: 1,
+            hasMore: true,
+          },
+        ],
+        pageParams: [1],
+      },
+
       getNextPageParam: (lastPage) => {
         if (!lastPage) return;
         return lastPage.hasMore ? lastPage.currentPage + 1 : undefined;
       },
     });
 
+  // console.log("posts", posts.posts.value.data);
+
   const allPosts = useMemo(() => {
-    if (!data?.pages) return;
-    return (data?.pages.flatMap((page) => page?.data) ?? []) as PostType[];
+    // if (!data?.pages) return;
+    return data?.pages.flatMap((page) => page?.data) as PostType[];
+    // return posts;
   }, [data?.pages]);
 
   useEffect(() => {

@@ -8,13 +8,11 @@ import {
 } from "@tanstack/react-query";
 const FeedPage = async () => {
   const queryClient = new QueryClient();
-
   await queryClient.prefetchInfiniteQuery({
     queryKey: ["getPosts"],
     queryFn: ({ pageParam = 1 }) => getPosts({ page: pageParam }),
     initialPageParam: 1,
   });
-
   const dehydratedState = dehydrate(queryClient);
 
   return (

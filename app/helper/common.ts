@@ -10,17 +10,29 @@ export const replaceHash = () => {
 };
 export const convertDateTime = (date: string) => {
   // hydration error can be occrred
-  const thisDay = new Date().getDate();
+  const today = new Date().getDate();
   const thisMonth = new Date().getMonth();
 
   const postedDay = new Date(date).getDate();
+  console.log("post day", postedDay);
+  console.log("this day", today);
   const postedMonth = new Date(date).getMonth();
   const dayToModify = new Date(date);
 
-  if (thisDay >= postedDay || thisMonth >= postedMonth) {
-    const hour = dayToModify.getUTCHours();
-    const min = String(dayToModify.getUTCMinutes()).padStart(2, "0");
-    return `Today at ${hour}:${min}`;
+  const day =
+    today == postedDay && postedMonth == thisMonth
+      ? "Today"
+      : postedDay == today - 1
+        ? "Yesterday"
+        : "";
+
+  if (
+    (today == postedDay && postedMonth == thisMonth) ||
+    postedDay == today - 1
+  ) {
+    const hour = dayToModify.getHours();
+    const min = String(dayToModify.getMinutes()).padStart(2, "0");
+    return `${day} at ${hour}:${min}`;
   }
   return dayToModify.toLocaleString("en-GB", {
     day: "2-digit",

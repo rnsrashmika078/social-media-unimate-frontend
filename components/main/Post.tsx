@@ -24,12 +24,14 @@ const Post = memo(() => {
       initialPageParam: 1,
       // enabled: false,
       getNextPageParam: (lastPage) => {
+        if (!lastPage) return;
         return lastPage.hasMore ? lastPage.currentPage + 1 : undefined;
       },
     });
 
   const allPosts = useMemo(() => {
-    return (data?.pages.flatMap((page) => page.data) ?? []) as PostType[];
+    if (!data?.pages) return;
+    return (data?.pages.flatMap((page) => page?.data) ?? []) as PostType[];
   }, [data?.pages]);
 
   useEffect(() => {

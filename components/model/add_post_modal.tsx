@@ -46,27 +46,28 @@ const AddPostModal = () => {
   const contentGenerate = async () => {
     const thread_id = "chat-123";
     const url = await uploadImage(file);
+    console.log("URL ", url);
     const content = getValues().content;
 
     if (!content) return;
 
     // const url =
     //   "https://res.cloudinary.com/dwcjokd3s/image/upload/v1755256165/images/nivpvznbqmybfmh6a2gn.jpg";
-    await stream.submit(
-      {
-        messages: [
-          { content, role: "human" },
-          url ? { url, role: "human" } : {},
-        ],
-        threadId: thread_id,
-      },
+    // await stream.submit(
+    //   {
+    //     messages: [
+    //       { content, role: "human" },
+    //       url ? { url, role: "human" } : {},
+    //     ],
+    //     threadId: thread_id,
+    //   },
 
-      {
-        config: {
-          configurable: { thread_id },
-        },
-      },
-    );
+    //   {
+    //     config: {
+    //       configurable: { thread_id },
+    //     },
+    //   },
+    // );
   };
 
   const [file, setFile] = useState<File | null>(null);

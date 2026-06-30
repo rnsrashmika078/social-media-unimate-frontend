@@ -116,6 +116,7 @@ export const addPost = async (data: {
 export const uploadImage = async (file: File | null) => {
   try {
     if (!file) return;
+    console.log("file", file);
     const res = await fetch("/api/upload");
     const { url } = await res.json();
 

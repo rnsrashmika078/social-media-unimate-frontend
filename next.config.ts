@@ -11,6 +11,11 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  serverExternalPackages: [
+    "langchain",
+    "@langchain/langgraph",
+    "@langchain/groq",
+  ],
 };
 
 export default nextConfig;

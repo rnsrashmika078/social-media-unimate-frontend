@@ -20,6 +20,7 @@ export default function Home() {
   });
 
   const handleSubmit = async (content: string) => {
+    const thread_id = "chat-123";
     const url = "";
     // const url =
     //   "https://res.cloudinary.com/dwcjokd3s/image/upload/v1755256165/images/nivpvznbqmybfmh6a2gn.jpg";

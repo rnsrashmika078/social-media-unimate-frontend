@@ -27,6 +27,8 @@ jobs:
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          AZURE_STORAGE_ACCOUNT: ${{secrets.AZURE_STORAGE_ACCOUNT}}
+          AZURE_STORAGE_KEY: ${{secrets.AZURE_STORAGE_KEY}}
         run: npm run build
 
       - name: Build Docker Image

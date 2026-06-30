@@ -59,7 +59,9 @@ const AddPostModal = () => {
           { content, role: "human" },
           url ? { url, role: "human" } : {},
         ],
+        threadId: "chat-123",
       },
+
       {
         config: {
           configurable: { thread_id },

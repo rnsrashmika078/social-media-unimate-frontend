@@ -10,10 +10,14 @@ const checkpointer = new MemorySaver();
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { messages } = body.input;
+    const { messages, thread_id } = body.input;
 
     const imageUrl = messages[1].url;
-
+    const config = {
+      configurable: {
+        thread_id,
+      },
+    };
     const llm = new ChatGroq({
       apiKey: "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",
       // apiKey: process.env.GROQ_API_KEY,
@@ -31,7 +35,6 @@ export async function POST(req: Request) {
       ],
     };
 
-    const config = body.config;
     const mainAgent = createAgent({
       model: llm,
       tools: primaryTools,

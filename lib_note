@@ -1,4 +1,7 @@
 @tanstack/react-query
+@hookform/resolvers
+react-hook-form
 axios
+
 @langchain/groq @langchain/core
 redux

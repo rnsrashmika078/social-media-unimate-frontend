@@ -100,3 +100,4 @@ OUTPUT:
     );
   }
 }
+export const runtime = "nodejs";

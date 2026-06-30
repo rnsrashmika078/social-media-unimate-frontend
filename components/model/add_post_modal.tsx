@@ -42,6 +42,7 @@ const AddPostModal = () => {
   const stream = useStream({
     transport,
   });
+  const [newContent, setNewContent] = useState<string>("");
 
   const contentGenerate = async () => {
     const thread_id = "chat-123";
@@ -68,6 +69,20 @@ const AddPostModal = () => {
     //     },
     //   },
     // );
+    const result = await fetch("/api/simple", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content }),
+    });
+
+    console.log(result);
+
+    const cont = await result.json();
+    console.log("contents", cont.content);
+    setNewContent(cont.content);
+    setValues({ content: cont.content });
   };
 
   const [file, setFile] = useState<File | null>(null);
@@ -89,7 +104,7 @@ const AddPostModal = () => {
     mutate(
       {
         user_id: authUserId,
-        content: data.content,
+        content: newContent === "" ? data.content : newContent,
         attachment: url || "",
       },
       {
@@ -110,15 +125,15 @@ const AddPostModal = () => {
     );
   };
 
-  useMemo(() => {
-    const content = stream.messages.map((msg) => {
-      const textContent = extractContent(msg);
-      setValues({ content: textContent });
-      return textContent as string;
-    });
+  // useMemo(() => {
+  //   const content = stream.messages.map((msg) => {
+  //     const textContent = extractContent(msg);
+  //     setValues({ content: textContent });
+  //     return textContent as string;
+  //   });
 
-    return content;
-  }, [setValues, stream.messages]);
+  //   return content;
+  // }, [setValues, stream.messages]);
 
   const { setIsModelOpen } = useAppContext();
 
@@ -161,7 +176,6 @@ const AddPostModal = () => {
         <Button
           type="button"
           onClick={() => {
-            console.log("value", getValues().content);
             contentGenerate();
           }}
         >

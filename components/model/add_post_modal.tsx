@@ -20,7 +20,6 @@ import {
   FetchStreamTransport,
   useStream,
 } from "@langchain/langgraph-sdk/react";
-import { v4 as uuid } from "uuid";
 
 const AddPostModal = () => {
   const {
@@ -45,8 +44,8 @@ const AddPostModal = () => {
   });
 
   const contentGenerate = async () => {
-    const thread_id = uuid();
-
+    const thread_id = "chat-123";
+    const url = await uploadImage(file);
     const content = getValues().content;
 
     if (!content) return;
@@ -59,7 +58,7 @@ const AddPostModal = () => {
           { content, role: "human" },
           url ? { url, role: "human" } : {},
         ],
-        threadId: "chat-123",
+        threadId: thread_id,
       },
 
       {

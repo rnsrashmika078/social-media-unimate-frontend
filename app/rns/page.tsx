@@ -6,7 +6,6 @@ import {
 } from "@langchain/langgraph-sdk/react";
 import { extractContent } from "../helper/common";
 
-import { v4 as uuid } from "uuid";
 export default function Home() {
   const transport = useMemo(() => {
     return new FetchStreamTransport({
@@ -21,7 +20,6 @@ export default function Home() {
   });
 
   const handleSubmit = async (content: string) => {
-    const thread_id = uuid();
     const url = "";
     // const url =
     //   "https://res.cloudinary.com/dwcjokd3s/image/upload/v1755256165/images/nivpvznbqmybfmh6a2gn.jpg";

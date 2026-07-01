@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { RootState } from "@/app/store/store";
 import Image from "next/image";
@@ -28,7 +29,7 @@ const Profile = memo(({ user }: { user: AuthUserType }) => {
           className="w-full h-60 "
         />
         <div className="absolute text-start left-10 top-20 gap-1 flex flex-col">
-          <Image
+          <img
             src={userProfile?.dp ?? DefaultProfileImage}
             alt="display picture"
             width={200}

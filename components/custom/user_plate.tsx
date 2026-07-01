@@ -17,7 +17,6 @@ import { deletePostQuery } from "@/app/queryOptions/postQuery";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
-
 type UserPlateProps = {
   postId?: number;
   profileImage?: string;
@@ -45,7 +44,7 @@ const UserPlate = memo(
     return (
       <div className="flex items-center justify-between gap-5  w-full select-none">
         <div className="flex gap-3 items-center">
-          <Image
+          <img
             src={profileImage ?? DefaultProfileImage.src}
             alt={"profile_image"}
             width={50}

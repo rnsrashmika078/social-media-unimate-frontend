@@ -12,7 +12,7 @@ import { useInView } from "framer-motion";
 import Spinner from "../custom/spinner";
 
 const Post = memo(
-  ({ posts, userId }: { posts?: PostType[]; userId?: number | undefined }) => {
+  ({ posts, userId }: { posts: PostType[]; userId?: number | undefined }) => {
     const infiniteScroll = useRef<HTMLDivElement | null>(null);
     const isInView = useInView(infiniteScroll, { once: false });
 

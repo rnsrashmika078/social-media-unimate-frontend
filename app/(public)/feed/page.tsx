@@ -7,7 +7,7 @@ const FeedPage = async () => {
   return (
     <>
       <AddPost />
-      <Post posts={posts.data} />
+      <Post posts={posts?.data} />
     </>
   );
 };

@@ -43,7 +43,7 @@ const Profile = memo(({ user }: { user: AuthUserType }) => {
         </div>
       </div>
       <div className="flex w-full  mt-5 items-center justify-center">
-        <Post userId={userProfile.id} />
+        <Post userId={userProfile.id} posts={[]} />
       </div>
     </div>
   );

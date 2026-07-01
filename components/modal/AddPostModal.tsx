@@ -2,7 +2,6 @@ import React, { useMemo, useState } from "react";
 import { FieldLabel } from "../ui/field";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -15,7 +14,7 @@ import { uploadImage } from "@/app/helper/posts";
 import ErrorMessage from "../custom/error";
 import { GrClose } from "react-icons/gr";
 import { useAppContext } from "@/app/providers/appContext";
-import { extractContent, replaceHash } from "@/app/helper/common";
+import { replaceHash } from "@/app/helper/common";
 import {
   FetchStreamTransport,
   useStream,

@@ -101,6 +101,9 @@ const AddPostModal = () => {
     if (!authUserId) {
       return;
     }
+    const url = await uploadImage(file);
+    setUrl(url);
+
     mutate(
       {
         user_id: authUserId,

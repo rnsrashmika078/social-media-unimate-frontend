@@ -59,6 +59,7 @@ const Post = memo(({ posts }: { posts: PostType[] }) => {
     fetchWait();
   }, [fetchNextPage, hasNextPage, isFetchingNextPage, isInView]);
 
+  console.log("allPosts", allPosts);
   return (
     <div className="">
       {allPosts && allPosts.length > 0 ? (

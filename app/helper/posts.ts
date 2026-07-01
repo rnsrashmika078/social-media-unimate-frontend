@@ -97,6 +97,7 @@ export const addPost = async (data: {
   attachment: string;
 }) => {
   try {
+    console.log("post data", data);
     const res = await axios.post(`${URI}/post/add`, data, {
       headers: {
         Accept: "application/json",

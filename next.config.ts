@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "randomuser.me" },
       {
         protocol: "https",
-        hostname: "socialmediastorage1.blob.core.windows.net",
+        hostname: "socialmediaapp.blob.core.windows.net",
       },
     ],
   },

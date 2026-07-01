@@ -23,7 +23,6 @@ const CommentSection = memo(({ postId }: CommentSectionProps) => {
   const queryClient = useQueryClient();
 
   const { data: comments } = useSuspenseQuery(getCommentsQuery(postId));
-  console.log("CommentSection.tsx: Rendering!");
   const {
     register,
     handleSubmit,
@@ -68,10 +67,12 @@ const CommentSection = memo(({ postId }: CommentSectionProps) => {
 
   return (
     <>
-      <hr className="mt-4 mb-4" />
+      <hr className="mt-2" />
+
       {comments?.map((c) => (
-        <div key={c.id}>
+        <div key={c.id} className="w-full mt-2">
           <UserPlate
+            postId={c.post_id}
             comment={c.comment}
             date={c.created_at}
             datePosition={"bottom"}
@@ -81,10 +82,13 @@ const CommentSection = memo(({ postId }: CommentSectionProps) => {
           />
         </div>
       ))}
-      <hr className="mt-4 mb-4" />
+      <hr className="mt-2" />
 
-      <div className="flex w-full mt-2 sticky -bottom-5 bg-post-background py-2">
-        <form onSubmit={handleSubmit(addCommentSubmit)} className="w-full flex items-center gap-2">
+      <div className="flex w-full  sticky -bottom-5 bg-post-background py-2">
+        <form
+          onSubmit={handleSubmit(addCommentSubmit)}
+          className="w-full flex items-center gap-2"
+        >
           <Input
             {...register("comment")}
             id="input-field-add-comment"
@@ -94,7 +98,7 @@ const CommentSection = memo(({ postId }: CommentSectionProps) => {
           />
 
           <Button type="submit" className="p-5">
-            <IoMdSend size={50}/>
+            <IoMdSend size={50} />
           </Button>
         </form>
       </div>

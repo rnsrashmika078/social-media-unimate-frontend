@@ -2,9 +2,20 @@ import axios from "axios";
 
 const URI = process.env.NEXT_PUBLIC_API_URL!;
 
-export const getPosts = async ({ page = 1 }) => {
+export const getPosts = async ({
+  page = 1,
+  userId,
+}: {
+  page: number;
+  userId?: number | undefined;
+}) => {
   try {
-    const res = await axios.get(`${URI}/post?page=${page}`, {});
+    const res = await axios.get(
+      userId
+        ? `${URI}/post?page=${page}&userId=${userId}`
+        : `${URI}/post?page=${page}`,
+      {},
+    );
     return res.data ?? [];
   } catch (err) {
     const payload = {
@@ -109,6 +120,20 @@ export const addPost = async (data: {
     const payload = {
       err: err instanceof Error ? err.message : "error while add post",
       path: "/helper/posts.ts/addPost()",
+    };
+    console.log(payload);
+    console.error(err);
+  }
+};
+export const deletePost = async (data: { postId: number }) => {
+  try {
+    const res = await axios.delete(`${URI}/post/${data.postId}`);
+
+    return res.data;
+  } catch (err) {
+    const payload = {
+      err: err instanceof Error ? err.message : "error while delete post",
+      path: "/helper/posts.ts/deletePost()",
     };
     console.log(payload);
     console.error(err);

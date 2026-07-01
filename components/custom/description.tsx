@@ -12,10 +12,12 @@ const Description = memo(({ desc }: DescriptionProp) => {
 
   return (
     <div className="w-full p-2 text-sm">
-      <ReactMarkdown>{desc || text}</ReactMarkdown>
+      <ReactMarkdown>{desc}</ReactMarkdown>
+
+      {/* {desc} */}
     </div>
   );
-})
-Description.displayName = "Description"
+});
+Description.displayName = "Description";
 
 export default Description;

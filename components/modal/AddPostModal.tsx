@@ -45,36 +45,17 @@ const AddPostModal = () => {
   const [newContent, setNewContent] = useState<string>("");
 
   const contentGenerate = async () => {
-    const thread_id = "chat-123";
-    const url = await uploadImage(file);
     console.log("URL ", url);
     const content = getValues().content;
 
-    if (!content) return;
+    if (!content && !url) return;
 
-    // const url =
-    //   "https://res.cloudinary.com/dwcjokd3s/image/upload/v1755256165/images/nivpvznbqmybfmh6a2gn.jpg";
-    // await stream.submit(
-    //   {
-    //     messages: [
-    //       { content, role: "human" },
-    //       url ? { url, role: "human" } : {},
-    //     ],
-    //     threadId: thread_id,
-    //   },
-
-    //   {
-    //     config: {
-    //       configurable: { thread_id },
-    //     },
-    //   },
-    // );
     const result = await fetch("/api/simple", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ content }),
+      body: JSON.stringify({ content, url }),
     });
 
     console.log(result);
@@ -85,7 +66,6 @@ const AddPostModal = () => {
     setValues({ content: cont.content });
   };
 
-  const [file, setFile] = useState<File | null>(null);
   // const router = useRouter();
   // const dispatch = useDispatch<AppDispatch>();
   // tanstack mutation
@@ -101,8 +81,6 @@ const AddPostModal = () => {
     if (!authUserId) {
       return;
     }
-    const url = await uploadImage(file);
-    setUrl(url);
 
     mutate(
       {
@@ -141,50 +119,54 @@ const AddPostModal = () => {
   const { setIsModelOpen } = useAppContext();
 
   return (
-    <div className="z-50 p-5 select-none shadow-2xl border rounded-2xl bg-post-background w-1/2 h-fit  fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-      <div className="w-full flex justify-between">
-        <h1 className="font-bold">Add Post</h1>
-        <h1 className="font-bold text-icon-color cursor-pointer transition-all hover:scale-110">
-          <GrClose
-            onClick={() => {
-              replaceHash();
-              setIsModelOpen(false);
+    <div className="fixed z-50 left-0 top-0 w-full h-full bg-opacity-50 backdrop-blur-sm">
+      <div className="fixed  z-50 p-5 select-none border rounded-2xl bg-post-background w-1/2 h-fit   top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="w-full flex justify-between">
+          <h1 className="font-bold">Add Post</h1>
+          <h1 className="font-bold text-icon-color cursor-pointer transition-all hover:scale-110">
+            <GrClose
+              onClick={() => {
+                replaceHash();
+                setIsModelOpen(false);
+              }}
+            />
+          </h1>
+        </div>
+        <hr className="p-2"></hr>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FieldLabel htmlFor=" input-field-profile-image">
+            Attachment
+          </FieldLabel>
+          <Input
+            type="file"
+            className="mt-2 mb-2"
+            onChange={async (e) => {
+              const file = e.target.files?.[0] || null;
+              if (!file) return;
+              const url = await uploadImage(file);
+              setUrl(url || null);
             }}
           />
-        </h1>
+          <FieldLabel htmlFor="input-field-profile-image">Content</FieldLabel>
+          <textarea
+            {...register("content")}
+            aria-label="description"
+            placeholder="add your thought.."
+            className={`resize-none rounded-2xl w-full h-full border  mt-2 pl-2 pt-2 ${stream.isLoading ? "animate-pulse" : ""}`}
+            rows={5}
+          />
+          {errors.content && <ErrorMessage error={errors.content?.message} />}
+          <Button type="submit">Post</Button>
+          <Button
+            type="button"
+            onClick={() => {
+              contentGenerate();
+            }}
+          >
+            Generate
+          </Button>
+        </form>
       </div>
-      <hr className="p-2"></hr>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FieldLabel htmlFor=" input-field-profile-image">Attachment</FieldLabel>
-        <Input
-          type="file"
-          className="mt-2 mb-2"
-          onChange={async (e) => {
-            setFile(e.target.files?.[0] || null);
-            const url = await uploadImage(file);
-            if (!url) return;
-            setUrl(url);
-          }}
-        />
-        <FieldLabel htmlFor="input-field-profile-image">Content</FieldLabel>
-        <textarea
-          {...register("content")}
-          aria-label="description"
-          placeholder="add your thought.."
-          className={`resize-none rounded-2xl w-full h-full border  mt-2 pl-2 pt-2 ${stream.isLoading ? "animate-pulse" : ""}`}
-          rows={5}
-        />
-        {errors.content && <ErrorMessage error={errors.content?.message} />}
-        <Button type="submit">Post</Button>
-        <Button
-          type="button"
-          onClick={() => {
-            contentGenerate();
-          }}
-        >
-          Generate
-        </Button>
-      </form>
     </div>
   );
 };

@@ -1,15 +1,17 @@
 "use client";
-import React from "react";
+import React, { memo } from "react";
 import Image from "next/image";
 import { FaUserCircle } from "react-icons/fa";
-
+import { useRouter } from "next/navigation";
 interface BadgeProps {
   dp: string | undefined;
+  id: number | undefined;
   onClick?: () => void;
 }
-const Badge = ({ dp, onClick }: BadgeProps) => {
+const Badge = memo(({ dp, id, onClick }: BadgeProps) => {
+  const router = useRouter();
   return (
-    <div onClick={() => onClick?.()}>
+    <div onClick={() => onClick?.()} className=" flex-shrink-0">
       {dp && dp ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
@@ -17,13 +19,15 @@ const Badge = ({ dp, onClick }: BadgeProps) => {
           alt="display picture"
           width={48}
           height={48}
-          className="rounded-full w-12 h-12 border shadow-md object-cover"
+          onClick={() => router.push(`/profile/${id}`)}
+          className="select-none rounded-full w-10 h-10 border shadow-md object-cover"
         />
       ) : (
         <FaUserCircle className="text-icon-color rounded-2xl" size={40} />
       )}
     </div>
   );
-};
+});
+Badge.displayName = "Badge";
 
 export default Badge;

@@ -1,12 +1,6 @@
 import { mutationOptions, queryOptions } from "@tanstack/react-query";
-import {
-  addComment,
-  addLike,
-  addPost,
-  getPostComments,
-  // getPostLikes,
-} from "../helper/posts";
-import { CommentType, LikeType } from "../types/globalTypes";
+import { addComment, addLike, addPost, deletePost, getPostComments } from "../helper/posts";
+import { CommentType } from "../types/globalTypes";
 
 // get post done inside server
 export function getCommentsQuery(post_id: number) {
@@ -16,18 +10,7 @@ export function getCommentsQuery(post_id: number) {
   });
 }
 // export function getLikesQuery(post_id: number) {
-//   return queryOptions({
-//     queryKey: ["likes", post_id],
-//     queryFn: (): Promise<LikeType[]> => getPostLikes({ post_id }),
-//   });
-// }
-// export function getPostQuery(page : number, isEnable: boolean) {
-//   return queryOptions({
-//     queryKey: ["getPosts", page ],
-//     queryFn: (): Promise<PostType[]> => getPosts({ page  }),
-//     enabled: isEnable,
-//   });
-// }
+
 export function addCommentsQuery() {
   return mutationOptions({
     mutationKey: ["comments"],
@@ -44,5 +27,11 @@ export function addPostQuery() {
   return mutationOptions({
     mutationKey: ["addPosts"],
     mutationFn: addPost,
+  });
+}
+export function deletePostQuery() {
+  return mutationOptions({
+    mutationKey: ["deletePost"],
+    mutationFn: deletePost,
   });
 }

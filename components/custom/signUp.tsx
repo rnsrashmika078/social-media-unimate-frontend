@@ -28,13 +28,13 @@ const SignUp = () => {
   } = useForm<signUpSchemaType>({
     resolver: zodResolver(signUpSchema),
   });
+  const [url, setUrl] = useState<string>("");
 
   // tanstack mutation
   const { mutate } = useMutation(signUpQuery());
   const dispatch = useDispatch<AppDispatch>();
 
   const onSubmit = async (data: signUpSchemaType) => {
-    const url = await uploadImage(file);
     mutate(
       {
         dp: url,
@@ -60,8 +60,6 @@ const SignUp = () => {
     reset();
   };
 
-  const [file, setFile] = useState<File | null>(null);
-
   return (
     <div className="border rounded-2xl  flex-col w-full p-5 bg-post-background select-none ">
       <h1 className="text-2xl mb-4">Sign up</h1>
@@ -72,7 +70,12 @@ const SignUp = () => {
           </FieldLabel>
           <Input
             type="file"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
+            onChange={async (e) => {
+              const file = e.target.files?.[0] || null;
+              if (!file) return;
+              const url = await uploadImage(file);
+              setUrl(url || null);
+            }}
           />
           <FieldLabel htmlFor="input-field-firstname">Profile Image</FieldLabel>
           <Input

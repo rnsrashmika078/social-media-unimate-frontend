@@ -2,7 +2,6 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST() {
-  console.log("authUser HIT");
 
   const cookieStore = cookies();
   const token = (await cookieStore).get("token")?.value;

@@ -24,7 +24,7 @@ const Card = memo(
           alt={"card image"}
           width={384}
           height={384}
-          className="flex w-96 h-96 items-center justify-center"
+          className="flex w-96 h-96  object-contain items-center justify-center"
         />
         {/* <div className="absolute bottom-5 left-5 right-5 text-white space-y-2">
           <h1 className="text-xl font-bold w-full ">

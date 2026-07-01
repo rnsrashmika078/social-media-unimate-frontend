@@ -1,14 +1,14 @@
 "use client";
 import { addLikeQuery } from "@/app/queryOptions/postQuery";
 import { RootState } from "@/app/store/store";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ThumbsUp } from "lucide-react";
-import { MessageCircleMore } from "lucide-react";
-import { Forward } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { FaThumbsUp } from "react-icons/fa6";
+import { FaShare } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import { memo, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import Spinner from "./spinner";
+import { FaComments } from "react-icons/fa";
 
 const CommentSection = dynamic(() => import("./comments"), {
   loading: () => <Spinner isLoading={true} />,
@@ -19,7 +19,6 @@ interface ReactBarProps {
 }
 
 const ReactBar = memo(({ postId, likedUsersId }: ReactBarProps) => {
-  console.log("ReactBar.tsx: Rendering!");
   const queryClient = useQueryClient();
   const userId = useSelector((store: RootState) => store.auth.authUser?.id);
   const [openSection, setOpenSection] = useState<string>("");
@@ -31,11 +30,12 @@ const ReactBar = memo(({ postId, likedUsersId }: ReactBarProps) => {
   }, [userId, likedUsersId]);
 
   return (
-    <div className="w-full select-none px-10 py-2">
+    <div className="w-full select-none px-4 py-2 text-xs ">
       <div className="flex justify-between">
-        <div className="flex flex-col items-center">
-          <ThumbsUp
-            className={`cursor-pointer ${isLiked ? "animate-accordion-down text-blue-500" : "text-icon-color"}`}
+        <div className="flex flex-col items-center gap-2">
+          <FaThumbsUp
+            size={24}
+            className={`cursor-pointer ${isLiked ? "animate-accordion-down text-blue-500 " : "text-icon-color"}`}
             onClick={() => {
               if (!userId) return;
               addLike(
@@ -46,22 +46,30 @@ const ReactBar = memo(({ postId, likedUsersId }: ReactBarProps) => {
                       queryKey: ["getPosts"],
                     });
                   },
-                  // onError: (data) => alert(JSON.stringify(data)),
                 },
               );
             }}
           />
           Like
         </div>
-        <div className="flex flex-col items-center">
-          <MessageCircleMore
+        <div className="flex flex-col items-center gap-2 cursor-pointer">
+          <FaComments
+            size={24}
             className="text-icon-color"
-            onClick={() => setOpenSection("comments")}
+            onClick={() =>
+              setOpenSection((prev) => (prev === "comments" ? "" : "comments"))
+            }
           />
           Comment
         </div>
-        <div className="flex flex-col items-center">
-          <Forward className="text-icon-color" />
+        <div className="flex flex-col items-center gap-2 cursor-pointer">
+          <FaShare
+            size={24}
+            className="text-icon-color"
+            onClick={() =>
+              setOpenSection((prev) => (prev === "share" ? "" : "share"))
+            }
+          />
           Share
         </div>
       </div>

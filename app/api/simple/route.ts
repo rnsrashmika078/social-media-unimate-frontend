@@ -5,7 +5,6 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY! });
 export async function POST(req: NextRequest) {
   const body = await req.json();
 
-  console.log("key", process.env.GROQ_API_KEY!);
   console.log("body", body);
 
   const chatCompletion = await groq.chat.completions.create({
@@ -30,10 +29,21 @@ OUTPUT:
       },
       {
         role: "user",
-        content: body.content,
+        content: [
+          {
+            type: "text",
+            text: body.content,
+          },
+          {
+            type: "image_url",
+            image_url: {
+              url: body.url,
+            },
+          },
+        ],
       },
     ],
-    model: "llama-3.1-8b-instant",
+    model: "meta-llama/llama-4-scout-17b-16e-instruct",
     temperature: 1,
     top_p: 1,
     stream: false,

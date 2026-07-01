@@ -25,7 +25,7 @@ const NavBar = memo(() => {
       icon: AiOutlineNotification,
       route: "notification",
     },
-    { name: "Logout", icon: AiOutlineLogout, route: "" },
+    // { name: "Logout", icon: AiOutlineLogout, route: "" },
   ];
 
   const router = useRouter();
@@ -34,7 +34,7 @@ const NavBar = memo(() => {
   const authUser = useSelector((store: RootState) => store.auth.authUser);
   return (
     <div className=" flex sticky top-0 w-full items-center justify-evenly bg-nav-color shadow-xl select-none px-10">
-      <div className="flex gap-5">
+      <div className="flex gap-2">
         <AiOutlineSlackSquare
           className="text-icon-color rounded-2xl"
           size={40}
@@ -51,7 +51,7 @@ const NavBar = memo(() => {
         </div>
       </div>
 
-      <div className="flex gap-2 p-2  text-center items-center justify-center text-xs">
+      <div className="flex gap-1 p-2  text-center items-center justify-center text-xs">
         {tabs.map((t, idx) => {
           const Icon = t.icon;
           return (
@@ -77,13 +77,7 @@ const NavBar = memo(() => {
             </div>
           );
         })}
-        <Badge
-          dp={authUser?.dp}
-          onClick={() => {
-            setActiveTab("profile");
-            router.push(`/profile/${authUser?.id}`);
-          }}
-        />
+        <Badge dp={authUser?.dp} id={authUser?.id} />
       </div>
     </div>
   );

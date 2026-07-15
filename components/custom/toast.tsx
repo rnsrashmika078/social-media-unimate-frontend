@@ -1,5 +1,5 @@
 "use client";
-import { useAppContext } from "@/app/providers/appContext";
+import { useNotificationContext } from "@/app/providers/NotificationProvider";
 import { memo, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
@@ -16,7 +16,8 @@ ToastProviderContainer.displayName = "ToastProviderContainer";
 export default ToastProviderContainer;
 
 const Toast = memo(() => {
-  const { notification, setNotification } = useAppContext();
+  const { setNotification, notification } = useNotificationContext();
+
   useEffect(() => {
     if (!notification) return;
 

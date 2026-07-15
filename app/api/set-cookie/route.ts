@@ -1,18 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { csrf } from "@/app/helper/auth";
-import api from "@/lib/axios";
 import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function POST(request: NextRequest) {
-  const body = await request.json();
+export async function POST() {
   try {
-    // await csrf();
-    const res = await api.post(`/auth/login`, {
-      email: body.email,
-      password: body.password,
-    });
-
     (await cookies()).set("auth", "true", {
       httpOnly: true,
       secure: false,
@@ -20,8 +11,7 @@ export async function POST(request: NextRequest) {
       sameSite: "lax",
     });
 
-    console.log("result", res.data);
-    return NextResponse.json(res.data);
+    return NextResponse.json({ success: true });
   } catch (error: any) {
     console.log("error", error);
     return NextResponse.json(

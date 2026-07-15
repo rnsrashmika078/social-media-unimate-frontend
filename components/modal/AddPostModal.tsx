@@ -13,12 +13,12 @@ import { addPostSchema, addPostSchemaType } from "@/app/schema/zodSchema";
 import { uploadImage } from "@/app/helper/posts";
 import ErrorMessage from "../custom/error";
 import { GrClose } from "react-icons/gr";
-import { useAppContext } from "@/app/providers/appContext";
 import { replaceHash } from "@/app/helper/common";
 import {
   FetchStreamTransport,
   useStream,
 } from "@langchain/langgraph-sdk/react";
+import { useModalContext } from "@/app/providers/ModalProvider";
 
 const AddPostModal = () => {
   const {
@@ -56,15 +56,11 @@ const AddPostModal = () => {
       body: JSON.stringify({ content, url }),
     });
 
-
     const cont = await result.json();
     setNewContent(cont.content);
     setValues({ content: cont.content });
   };
 
-  // const router = useRouter();
-  // const dispatch = useDispatch<AppDispatch>();
-  // tanstack mutation
   const { mutate } = useMutation(addPostQuery());
   const authUserId = useSelector((store: RootState) => store.auth.authUser?.id);
 
@@ -112,7 +108,7 @@ const AddPostModal = () => {
   //   return content;
   // }, [setValues, stream.messages]);
 
-  const { setIsModelOpen } = useAppContext();
+  const { setIsModelOpen } = useModalContext();
 
   return (
     <div className="fixed z-50 left-0 top-0 w-full h-full bg-opacity-50 backdrop-blur-sm">

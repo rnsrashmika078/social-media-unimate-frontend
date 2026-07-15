@@ -1,20 +1,32 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { Moon } from "lucide-react";
-import { Sun } from "lucide-react";
+import React, { memo, useEffect, useState } from "react";
+import { Moon, Sun } from "lucide-react";
 
-const Theme = () => {
-  const [isDark, setIsDark] = useState<boolean>(false);
+const Theme = memo(() => {
+  const [mounted, setMounted] = useState(false);
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    const root = document.documentElement;
+    setIsDark(localStorage.getItem("theme") === "dark");
+    setMounted(true);
+  }, []);
 
+  useEffect(() => {
+    if (!mounted) return;
+    const root = document.documentElement;
     if (isDark) {
-      root.classList.remove("dark");
-    } else {
       root.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      localStorage.setItem("theme", "light");
     }
-  }, [isDark]);
+  }, [isDark, mounted]);
+
+  if (!mounted) {
+    return <div className="fixed bottom-0 right-0 p-5 w-6 h-6" />;
+  }
+
   return (
     <div
       className="fixed bottom-0 right-0 p-5"
@@ -23,6 +35,7 @@ const Theme = () => {
       {isDark ? <Sun /> : <Moon />}
     </div>
   );
-};
+});
+Theme.displayName = "Theme";
 
 export default Theme;

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useAppContext } from "@/app/providers/appContext";
 import { Input } from "../ui/input";
 import { SearchIcon } from "lucide-react";
 import {
@@ -17,9 +16,12 @@ import { memo } from "react";
 import Badge from "./badge";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { useTabContext } from "@/app/providers/TabProvider";
+import { useNotificationContext } from "@/app/providers/NotificationProvider";
 
 const NavBar = memo(() => {
-  const { setActiveTab, activeTab, setNotification } = useAppContext();
+  const { setActiveTab, activeTab } = useTabContext();
+  const { setNotification } = useNotificationContext();
 
   const tabs = [
     { name: "Home", icon: AiOutlineHome, route: "/feed" },

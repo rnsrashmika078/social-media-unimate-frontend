@@ -30,8 +30,12 @@ export type commentSchemaType = z.infer<typeof commentSchema>;
 
 export const addPostSchema = z.object({
   content: z.string(),
-  
-  
 });
 
 export type addPostSchemaType = z.infer<typeof addPostSchema>;
+
+// otp
+export const OTPSchema = z.object({
+  content: z.string(),
+});
+export type OTPSchemaType = z.infer<typeof OTPSchema>;

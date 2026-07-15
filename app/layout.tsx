@@ -4,9 +4,9 @@ import "./globals.css";
 import Theme from "@/components/custom/theme";
 import { ReduxProvider } from "@/components/providers/reduxProvider";
 import QueryProvider from "./providers/queryClientProvider";
-import { AppContextProvider } from "./providers/appContext";
-import AuthSync from "@/components/custom/authSync";
+import { AppProviders } from "./providers/AppProvider";
 import ToastProviderContainer from "@/components/custom/toast";
+
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
 //   subsets: ["latin"],
@@ -40,11 +40,11 @@ export default function RootLayout({
       >
         <QueryProvider>
           <ReduxProvider>
-            <AppContextProvider>
+            <AppProviders>
               <Theme />
               <ToastProviderContainer />
               <div className="flex min-w-screen h-screen">{children}</div>
-            </AppContextProvider>
+            </AppProviders>
           </ReduxProvider>
         </QueryProvider>
       </body>

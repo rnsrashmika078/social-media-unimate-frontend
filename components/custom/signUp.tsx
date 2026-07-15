@@ -11,12 +11,11 @@ import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
 import { signUpQuery } from "@/app/queryOptions/authQuery";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/store/store";
 import { setAuthUser } from "@/app/store/authSlice";
 import { useState } from "react";
-import { useAppContext } from "@/app/providers/appContext";
+import { useNotificationContext } from "@/app/providers/NotificationProvider";
 
 const SignUp = () => {
   const router = useRouter();
@@ -32,7 +31,9 @@ const SignUp = () => {
 
   const { mutate, isPending } = useMutation(signUpQuery());
   const dispatch = useDispatch<AppDispatch>();
-  const { setNotification } = useAppContext();
+  const { setNotification } = useNotificationContext();
+
+  
 
   const onSubmit = async (data: signUpSchemaType) => {
     mutate(

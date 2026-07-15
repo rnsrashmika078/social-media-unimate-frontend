@@ -11,13 +11,11 @@ import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { signInQuery } from "@/app/queryOptions/authQuery";
 import { useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/app/store/store";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/app/store/store";
 import { setAuthUser } from "@/app/store/authSlice";
 import { memo } from "react";
-import { useAppContext } from "@/app/providers/appContext";
-import { ApiResponse, AuthUserType } from "@/app/types/globalTypes";
-import { AxiosError } from "axios";
+import { useNotificationContext } from "@/app/providers/NotificationProvider";
 
 const SignIn = memo(() => {
   const {
@@ -33,7 +31,7 @@ const SignIn = memo(() => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { mutate, isPending } = useMutation(signInQuery());
-  const { setNotification } = useAppContext();
+  const { setNotification } = useNotificationContext();
 
   const onSubmit = async (data: signInSchemaType) => {
     mutate(
@@ -50,7 +48,7 @@ const SignIn = memo(() => {
           reset();
         },
         onSuccess: (data) => {
-          console.log('Succ' , data)
+          console.log("Succ", data);
           router.push(`/feed`);
           setNotification({ status: 200, message: data.message });
           dispatch(setAuthUser(data.result.user));

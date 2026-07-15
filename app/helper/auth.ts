@@ -11,20 +11,22 @@ export async function csrf() {
 
 export const signIn = async (data: { email: string; password: string }) => {
   await csrf();
-
-  const res = await axios.post(
-    "/api/set-cookie",
-    { email: data.email, password: data.password, isAuthenticated: true },
-    {
-      headers: {
-        Accept: "application/json",
-        "content-type": "application/json",
+  const res = await api.post(`/auth/login`, data);
+  if (res.data.success) {
+    await axios.post(
+      `/api/set-cookie`,
+      {},
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
       },
-    },
-  );
+    );
+  }
+
   return res.data;
 };
-
 export const signUp = async (data: {
   firstname: string;
   lastname: string;
@@ -36,7 +38,7 @@ export const signUp = async (data: {
 }) => {
   await csrf();
   const res = await api.post(`/auth/register`, data);
-  console.log("res" , res)
+  console.log("res", res);
   return res.data;
 };
 export const resetPassword = async (data: {
@@ -47,23 +49,23 @@ export const resetPassword = async (data: {
   const token = res.data.token;
 
   await axios.post(`/api/set-cookie`, { token });
-  console.log("res" , res)
+  console.log("res", res);
   return res.data;
 };
 export const getAuthUser = async () => {
   await csrf();
-  const res = await api.get(`${URI}/auth/user`);
-  return res.data.user;
+  const res = await api.get(`/auth/user`);
+  console.log(res.data);
+  return res.data;
 };
 export const getUserProfile = async (userId: number): Promise<AuthUserType> => {
   const res = await axios.post(`${URI}/user/get-user-profile/${userId}`);
   // get the current data from the database
 
-  return res.data.user;
+  return res.data;
 };
 export const signOut = async () => {
   await csrf();
   const res = await api.post(`/auth/logout`);
-
   return res.data;
 };

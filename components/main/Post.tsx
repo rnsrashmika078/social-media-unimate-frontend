@@ -1,5 +1,5 @@
 "use client";
-import React, { memo, useEffect, useMemo, useRef } from "react";
+import { memo, useEffect, useMemo, useRef } from "react";
 import UserPlate from "../custom/user_plate";
 import Card from "../custom/card";
 import Description from "../custom/description";
@@ -10,6 +10,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { getPosts } from "@/app/helper/posts";
 import { useInView } from "framer-motion";
 import Spinner from "../custom/spinner";
+import NotFound from "../custom/NotFound";
 
 const Post = memo(
   ({ posts, userId }: { posts: PostType[]; userId?: number | undefined }) => {
@@ -86,9 +87,7 @@ const Post = memo(
             );
           })
         ) : (
-          <div className="text-center mt-5">
-            Hmm...It looks like feed is empty
-          </div>
+          <NotFound />
         )}
         <div ref={infiniteScroll}></div>
         <Spinner isLoading={isInView && hasNextPage} />

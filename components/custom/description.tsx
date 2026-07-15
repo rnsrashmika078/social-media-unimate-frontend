@@ -8,7 +8,6 @@ const Description = memo(({ desc }: DescriptionProp) => {
     Labrador  
     Burnese Mountain Dog`;
 
-  console.log("Description.tsx: Rendering!");
 
   return (
     <div className="w-full p-2 text-sm">

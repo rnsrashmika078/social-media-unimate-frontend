@@ -44,7 +44,6 @@ const AddPostModal = () => {
   const [newContent, setNewContent] = useState<string>("");
 
   const contentGenerate = async () => {
-    console.log("URL ", url);
     const content = getValues().content;
 
     if (!content && !url) return;
@@ -57,10 +56,8 @@ const AddPostModal = () => {
       body: JSON.stringify({ content, url }),
     });
 
-    console.log(result);
 
     const cont = await result.json();
-    console.log("contents", cont.content);
     setNewContent(cont.content);
     setValues({ content: cont.content });
   };

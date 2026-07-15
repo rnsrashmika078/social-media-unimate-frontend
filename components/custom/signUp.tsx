@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -15,9 +16,8 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/store/store";
 import { setAuthUser } from "@/app/store/authSlice";
 import { useState } from "react";
-import { uploadImage } from "@/app/helper/posts";
+import { useAppContext } from "@/app/providers/appContext";
 
-// component
 const SignUp = () => {
   const router = useRouter();
   const {
@@ -30,14 +30,14 @@ const SignUp = () => {
   });
   const [url, setUrl] = useState<string>("");
 
-  // tanstack mutation
-  const { mutate } = useMutation(signUpQuery());
+  const { mutate, isPending } = useMutation(signUpQuery());
   const dispatch = useDispatch<AppDispatch>();
+  const { setNotification } = useAppContext();
 
   const onSubmit = async (data: signUpSchemaType) => {
     mutate(
       {
-        dp: url,
+        dp: url ?? "sample.png",
         firstname: data.firstname,
         lastname: data.lastname,
         username: data.username,
@@ -46,12 +46,16 @@ const SignUp = () => {
         password_confirmation: data.password_confirmation,
       },
       {
-        onError: (error) => {
-          toast.error(error.message);
+        onError(error: any) {
+          setNotification({
+            message: error?.response?.data?.message,
+            status: error?.response?.status,
+          });
+          reset();
         },
         onSuccess: (data) => {
-          toast.success(data.message);
-          dispatch(setAuthUser(data?.user));
+          setNotification({ status: 200, message: data.message });
+          dispatch(setAuthUser(data.result.user));
           reset();
           router.push(`/feed`);
         },
@@ -61,94 +65,96 @@ const SignUp = () => {
   };
 
   return (
-    <div className="border rounded-2xl  flex-col w-full p-5 bg-post-background select-none ">
-      <h1 className="text-2xl mb-4">Sign up</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Field className="mb-2 grid grid-cols-2">
-          <FieldLabel htmlFor="input-field-profile-image">
-            Profile Image
-          </FieldLabel>
+    <div className="w-full max-w-md mx-auto bg-post-background border rounded-2xl p-6 space-y-5">
+      <h1 className="text-2xl font-semibold text-center">Sign up</h1>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div className="space-y-2">
+          <FieldLabel>Profile Image</FieldLabel>
           <Input
             type="file"
             onChange={async (e) => {
               const file = e.target.files?.[0] || null;
               if (!file) return;
-              const url = await uploadImage(file);
+              const url = "sample";
               setUrl(url || null);
             }}
           />
-          <FieldLabel htmlFor="input-field-firstname">Profile Image</FieldLabel>
-          <Input
-            {...register("firstname")}
-            id="input-field-firstname"
-            type="text"
-            className="p-5 mb-2"
-            placeholder="Enter your firstname"
-          />
-          {errors.username && <ErrorMessage error={errors.lastname?.message} />}
-          <FieldLabel htmlFor="input-field-lastname">Lastname</FieldLabel>
-          <Input
-            {...register("lastname")}
-            id="input-field-lastname"
-            type="text"
-            className="p-5 mb-2"
-            placeholder="Enter your lastname"
-          />
-          {errors.username && <ErrorMessage error={errors.lastname?.message} />}
-          <FieldLabel htmlFor="input-field-username">Username</FieldLabel>
-          <Input
-            {...register("username")}
-            id="input-field-username"
-            type="text"
-            className="p-5 mb-2"
-            placeholder="Enter your username"
-          />
-          {errors.username && <ErrorMessage error={errors.username?.message} />}
-          <FieldLabel htmlFor="input-field-username">Email</FieldLabel>
-          <Input
-            {...register("email")}
-            id="input-field-email"
-            type="text"
-            className="p-5 mb-2"
-            placeholder="Enter your email"
-          />
-          {errors.email && <ErrorMessage error={errors.email?.message} />}
-          <FieldLabel htmlFor="input-field-email">Password</FieldLabel>
-          <Input
-            {...register("password")}
-            id="input-field-password"
-            type="text"
-            className="p-5 mb-2"
-            placeholder="Enter your password"
-          />
-          {errors.password && <ErrorMessage error={errors.password?.message} />}
+        </div>
 
-          <FieldLabel htmlFor="input-field-email">Confirm password</FieldLabel>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-1">
+            <FieldLabel>Firstname</FieldLabel>
+            <Input
+              {...register("firstname")}
+              type="text"
+              placeholder="Firstname"
+            />
+            {errors.firstname && (
+              <ErrorMessage error={errors.firstname?.message} />
+            )}
+          </div>
+
+          <div className="space-y-1">
+            <FieldLabel>Lastname</FieldLabel>
+            <Input
+              {...register("lastname")}
+              type="text"
+              placeholder="Lastname"
+            />
+            {errors.lastname && (
+              <ErrorMessage error={errors.lastname?.message} />
+            )}
+          </div>
+        </div>
+
+        <div className="space-y-1">
+          <FieldLabel>Username</FieldLabel>
+          <Input {...register("username")} type="text" placeholder="Username" />
+          {errors.username && <ErrorMessage error={errors.username?.message} />}
+        </div>
+
+        <div className="space-y-1">
+          <FieldLabel>Email</FieldLabel>
+          <Input {...register("email")} type="text" placeholder="Email" />
+          {errors.email && <ErrorMessage error={errors.email?.message} />}
+        </div>
+
+        <div className="space-y-1">
+          <FieldLabel>Password</FieldLabel>
+          <Input {...register("password")} type="text" placeholder="Password" />
+          {errors.password && <ErrorMessage error={errors.password?.message} />}
+        </div>
+
+        <div className="space-y-1">
+          <FieldLabel>Confirm password</FieldLabel>
           <Input
             {...register("password_confirmation")}
-            id="input-field-confirm"
             type="text"
-            className="p-5 mb-2"
-            placeholder="Enter your confirm password"
+            placeholder="Confirm password"
           />
           {errors.password_confirmation && (
             <ErrorMessage error={errors.password_confirmation?.message} />
           )}
+        </div>
 
-          <FieldDescription>
-            Enter your login credentials to login
-          </FieldDescription>
-        </Field>
-        <div className="flex flex-col w-full space-y-2">
-          <Button type={"submit"} disabled={isSubmitting}>
-            Sign Up
+        <FieldDescription className="text-center">
+          Enter your login credentials to login
+        </FieldDescription>
+
+        <div className="space-y-3">
+          <Button type="submit" disabled={isPending} className="w-full">
+            {!isPending ? "Sign Up" : "Creating account.."}
           </Button>
-          <span className="border border-b-2"></span>
+
+          <div className="border-t" />
+
           <FieldDescription className="text-center">
             Already have account ?
           </FieldDescription>
+
           <Link href={"/sign-in"}>
-            <Button type="submit" disabled={isSubmitting} className="w-full">
+            <Button type="button" disabled={isSubmitting} className="w-full">
               Sign In
             </Button>
           </Link>

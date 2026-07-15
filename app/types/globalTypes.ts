@@ -40,3 +40,19 @@ export type LikeType = {
   created_at: string;
   updated_at: string;
 };
+
+export type TanstackErrorType = {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+};
+
+// this is the error return types
+export type ApiResponse<T = unknown> = {
+  success: boolean;
+  message: string;
+  result: T | null;
+  errors: Record<string, string[]> | null;
+};

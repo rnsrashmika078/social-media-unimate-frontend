@@ -47,13 +47,11 @@ const Post = memo(
       if (!hasNextPage) return;
       if (isFetchingNextPage) return;
       const fetchWait = async () => {
-        // await new Promise((resolve) => setTimeout(resolve, 2000));
         fetchNextPage();
       };
       fetchWait();
     }, [fetchNextPage, hasNextPage, isFetchingNextPage, isInView]);
 
-    console.log("allPosts", allPosts);
     return (
       <div className="select-auto">
         {allPosts && allPosts.length > 0 ? (

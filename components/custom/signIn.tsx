@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 import { useForm } from "react-hook-form";
@@ -10,12 +11,15 @@ import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { signInQuery } from "@/app/queryOptions/authQuery";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/app/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/app/store/store";
 import { setAuthUser } from "@/app/store/authSlice";
-const SignIn = () => {
-  // react hook fomr
+import { memo } from "react";
+import { useAppContext } from "@/app/providers/appContext";
+import { ApiResponse, AuthUserType } from "@/app/types/globalTypes";
+import { AxiosError } from "axios";
+
+const SignIn = memo(() => {
   const {
     register,
     handleSubmit,
@@ -27,10 +31,10 @@ const SignIn = () => {
 
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-  // tanstack mutation
-  const { mutate } = useMutation(signInQuery());
 
-  // form submition
+  const { mutate, isPending } = useMutation(signInQuery());
+  const { setNotification } = useAppContext();
+
   const onSubmit = async (data: signInSchemaType) => {
     mutate(
       {
@@ -38,65 +42,76 @@ const SignIn = () => {
         password: data.password,
       },
       {
-        onError: (error) => {
+        onError(error: any) {
+          setNotification({
+            message: error?.response?.data?.message,
+            status: error?.response?.status,
+          });
           reset();
-          toast.error(error.message);
         },
         onSuccess: (data) => {
-          toast.success(data.message);
-          dispatch(setAuthUser(data?.user));
-          reset();
+          console.log('Succ' , data)
           router.push(`/feed`);
+          setNotification({ status: 200, message: data.message });
+          dispatch(setAuthUser(data.result.user));
+          reset();
         },
       },
     );
   };
-  return (
-    <div className="border rounded-2xl flex flex-col w-full p-5 bg-post-background select-none">
-      <h1 className="text-2xl mb-4">Sign in</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Field className="mb-2">
-          <FieldLabel htmlFor="input-field-email">Email</FieldLabel>
-          <Input
-            {...register("email")}
-            id="input-field-email"
-            type="text"
-            className="p-5 mb-2"
-            placeholder="Enter your email"
-          />
-          {errors.email && <ErrorMessage error={errors.email?.message} />}
-          <FieldLabel htmlFor="input-field-email">Password</FieldLabel>
-          <Input
-            {...register("password")}
-            id="input-field-password"
-            type="text"
-            className="p-5 mb-2"
-            placeholder="Enter your password"
-          />
-          {errors.password && <ErrorMessage error={errors.password?.message} />}
 
-          <FieldDescription>
+  return (
+    <div className="w-full max-w-md mx-auto bg-post-background border rounded-2xl p-6 space-y-5">
+      <h1 className="text-2xl font-semibold text-center">Sign in</h1>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        <div className="space-y-3">
+          <div className="space-y-1">
+            <FieldLabel>Email</FieldLabel>
+            <Input
+              {...register("email")}
+              type="text"
+              placeholder="Enter your email"
+            />
+            {errors.email && <ErrorMessage error={errors.email.message} />}
+          </div>
+
+          <div className="space-y-1">
+            <FieldLabel>Password</FieldLabel>
+            <Input
+              {...register("password")}
+              type="text"
+              placeholder="Enter your password"
+            />
+            {errors.password && (
+              <ErrorMessage error={errors.password.message} />
+            )}
+          </div>
+
+          <FieldDescription className="text-center">
             Enter your login credentials to login
           </FieldDescription>
-        </Field>
-        <div className="flex flex-col space-y-2">
-          <Button type="submit" disabled={isSubmitting}>
-            Sign In
+        </div>
+
+        <div className="space-y-3">
+          <Button type="submit" disabled={isPending} className="w-full">
+            {!isPending ? "Sign In" : "Signin...Please wait.."}
           </Button>
+
           <FieldDescription className="text-center">
-            Forget the password ?{" "}
-            <Link href={"/reset"}>
-              <span>Reset</span>
+            Forget the password?{" "}
+            <Link href="/reset" className="underline">
+              Reset
             </Link>
           </FieldDescription>
 
-          <span className="border border-b-2"></span>
+          <div className="border-t" />
 
           <FieldDescription className="text-center">
             Create a new account
           </FieldDescription>
 
-          <Link href={"/sign-up"}>
+          <Link href="/sign-up">
             <Button type="button" disabled={isSubmitting} className="w-full">
               Sign Up
             </Button>
@@ -105,6 +120,7 @@ const SignIn = () => {
       </form>
     </div>
   );
-};
+});
+SignIn.displayName = "SignIn";
 
 export default SignIn;

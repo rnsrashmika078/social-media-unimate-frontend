@@ -5,7 +5,6 @@ import { ChatGroq } from "@langchain/groq";
 export const ImageDescriber = tool(
   async ({ topic, image_url }: { image_url: string; topic: string }) => {
     try {
-      console.log("Given image", image_url);
       const input = {
         messages: [
           new HumanMessage({

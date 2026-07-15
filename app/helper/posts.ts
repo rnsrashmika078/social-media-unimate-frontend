@@ -22,7 +22,6 @@ export const getPosts = async ({
       err: err instanceof Error ? err.message : "error while getting posts",
       path: "/helper/posts.ts/getPosts()",
     };
-    console.log(payload);
     console.error(err);
   }
 };
@@ -32,12 +31,7 @@ export const getPostComments = async (data: { post_id: number }) => {
 
     return res.data.comments ?? [];
   } catch (err) {
-    const payload = {
-      err: err instanceof Error ? err.message : "error while getPostComments",
-      path: "/helper/posts.ts/getPostComments()",
-    };
-    console.log(payload);
-    console.error(err);
+    throw err;
   }
 };
 export const getPostLikes = async (data: { post_id: number }) => {
@@ -45,13 +39,7 @@ export const getPostLikes = async (data: { post_id: number }) => {
     const res = await axios.get(`${URI}/post/like/${data.post_id}`, {});
     return res.data.comments ?? [];
   } catch (err) {
-    const payload = {
-      err:
-        err instanceof Error ? err.message : "error while getting post likes",
-      path: "/helper/posts.ts/getPostLikes()",
-    };
-    console.log(payload);
-    console.error(err);
+    throw err;
   }
 };
 export const addComment = async (data: {
@@ -72,12 +60,7 @@ export const addComment = async (data: {
 
     return res.data;
   } catch (err) {
-    const payload = {
-      err: err instanceof Error ? err.message : "error while add Comment",
-      path: "/helper/posts.ts/addComment()",
-    };
-    console.log(payload);
-    console.error(err);
+    throw err;
   }
 };
 export const addLike = async (data: { post_id: number; user_id: number }) => {
@@ -94,12 +77,7 @@ export const addLike = async (data: { post_id: number; user_id: number }) => {
 
     return res.data;
   } catch (err) {
-    const payload = {
-      err: err instanceof Error ? err.message : "error while add Like",
-      path: "/helper/posts.ts/addLike()",
-    };
-    console.log(payload);
-    console.error(err);
+    throw err;
   }
 };
 export const addPost = async (data: {
@@ -108,7 +86,6 @@ export const addPost = async (data: {
   attachment: string;
 }) => {
   try {
-    console.log("post data", data);
     const res = await axios.post(`${URI}/post/add`, data, {
       headers: {
         Accept: "application/json",
@@ -117,12 +94,7 @@ export const addPost = async (data: {
 
     return res.data;
   } catch (err) {
-    const payload = {
-      err: err instanceof Error ? err.message : "error while add post",
-      path: "/helper/posts.ts/addPost()",
-    };
-    console.log(payload);
-    console.error(err);
+    throw err;
   }
 };
 export const deletePost = async (data: { postId: number }) => {
@@ -131,18 +103,12 @@ export const deletePost = async (data: { postId: number }) => {
 
     return res.data;
   } catch (err) {
-    const payload = {
-      err: err instanceof Error ? err.message : "error while delete post",
-      path: "/helper/posts.ts/deletePost()",
-    };
-    console.log(payload);
-    console.error(err);
+    throw err;
   }
 };
 export const uploadImage = async (file: File | null) => {
   try {
     if (!file) return;
-    console.log("file", file);
     const res = await fetch("/api/upload");
     const { url } = await res.json();
 
@@ -158,11 +124,7 @@ export const uploadImage = async (file: File | null) => {
     const imageUrl = url.split("?")[0];
     return imageUrl;
   } catch (err) {
-    const payload = {
-      err: err instanceof Error ? err.message : "error while Upload image",
-      path: "/helper/posts.ts/uploadImage()",
-    };
-    console.log(payload);
-    console.error(err);
+    throw err;
+
   }
 };

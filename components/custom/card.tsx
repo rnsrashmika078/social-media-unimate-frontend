@@ -12,7 +12,6 @@ type CardProps = {
 };
 const Card = memo(
   ({ title, description, buttonText, image, children }: CardProps) => {
-    console.log("Card.tsx: Rendering!");
 
     if (image === "" || image === "url") return;
 

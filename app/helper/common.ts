@@ -14,8 +14,6 @@ export const convertDateTime = (date: string) => {
   const thisMonth = new Date().getMonth();
 
   const postedDay = new Date(date).getDate();
-  console.log("post day", postedDay);
-  console.log("this day", today);
   const postedMonth = new Date(date).getMonth();
   const dayToModify = new Date(date);
 

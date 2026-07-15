@@ -5,7 +5,6 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY! });
 export async function POST(req: NextRequest) {
   const body = await req.json();
 
-  console.log("body", body);
 
   const chatCompletion = await groq.chat.completions.create({
     messages: [
@@ -51,7 +50,6 @@ OUTPUT:
   });
 
   const content = chatCompletion.choices[0]?.message?.content ?? "";
-  console.log("content", content);
 
   return NextResponse.json({
     message: "success",

@@ -16,6 +16,7 @@ import { RootState } from "@/app/store/store";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { memo } from "react";
 import { IoMdSend } from "react-icons/io";
+import { useAppContext } from "@/app/providers/appContext";
 interface CommentSectionProps {
   postId: number;
 }

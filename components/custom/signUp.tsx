@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 import { useForm } from "react-hook-form";
@@ -16,6 +16,8 @@ import { AppDispatch } from "@/app/store/store";
 import { setAuthUser } from "@/app/store/authSlice";
 import { useState } from "react";
 import { useNotificationContext } from "@/app/providers/NotificationProvider";
+import { frontEndConfig } from "@/config";
+import { setLocalStorage } from "@/app/helper/storage";
 
 const SignUp = () => {
   const router = useRouter();
@@ -32,8 +34,6 @@ const SignUp = () => {
   const { mutate, isPending } = useMutation(signUpQuery());
   const dispatch = useDispatch<AppDispatch>();
   const { setNotification } = useNotificationContext();
-
-  
 
   const onSubmit = async (data: signUpSchemaType) => {
     mutate(
@@ -57,8 +57,9 @@ const SignUp = () => {
         onSuccess: (data) => {
           setNotification({ status: 200, message: data.message });
           dispatch(setAuthUser(data.result.user));
+          setLocalStorage("email", data.result.user.email);
           reset();
-          router.push(`/feed`);
+          router.push(frontEndConfig.AUTH.REQUEST_VERIFICATION);
         },
       },
     );
@@ -154,7 +155,7 @@ const SignUp = () => {
             Already have account ?
           </FieldDescription>
 
-          <Link href={"/sign-in"}>
+          <Link href={frontEndConfig.AUTH.SIGN_IN}>
             <Button type="button" disabled={isSubmitting} className="w-full">
               Sign In
             </Button>

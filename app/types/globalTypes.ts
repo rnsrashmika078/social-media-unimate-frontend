@@ -1,6 +1,7 @@
 export type AuthUserType = {
   firstname: string;
   lastname: string;
+  email_verified?: boolean;
   username: string;
   email: string;
   dp: string;

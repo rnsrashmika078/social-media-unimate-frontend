@@ -1,4 +1,4 @@
-import z from "zod";
+import z, { string } from "zod";
 
 export const signInSchema = z.object({
   email: z.string().email(),
@@ -34,8 +34,19 @@ export const addPostSchema = z.object({
 
 export type addPostSchemaType = z.infer<typeof addPostSchema>;
 
-// otp
-export const OTPSchema = z.object({
-  content: z.string(),
+// otp -> send
+export const SendOTPSchema = z.object({
+  email: z.string().optional(),
+  mobile: z.string().optional(),
+  media_type: z.string().optional(),
 });
-export type OTPSchemaType = z.infer<typeof OTPSchema>;
+export type SendOTPSchemaType = z.infer<typeof SendOTPSchema>;
+
+// otp -> verify
+export const VerifyOTPSchema = z.object({
+  email: z.string().optional(),
+  mobile: z.string().optional(),
+  code: z.number().optional(),
+  media_type: z.string().optional(),
+});
+export type VerifyOTPSchemaType = z.infer<typeof VerifyOTPSchema>;

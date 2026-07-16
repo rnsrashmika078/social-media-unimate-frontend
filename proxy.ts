@@ -7,7 +7,12 @@ export function proxy(req: NextRequest) {
 
   const protectedRoutes = ["/feed"];
 
-  const publicRoutes = ["/sign-in", "/sign-up"];
+  const publicRoutes = [
+    "/sign-in",
+    "/sign-up",
+    // "/verify",
+    // "/request-verification",
+  ];
 
   const path = req.nextUrl.pathname;
 

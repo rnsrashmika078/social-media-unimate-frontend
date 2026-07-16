@@ -16,6 +16,8 @@ import { AppDispatch } from "@/app/store/store";
 import { setAuthUser } from "@/app/store/authSlice";
 import { memo } from "react";
 import { useNotificationContext } from "@/app/providers/NotificationProvider";
+import { frontEndConfig } from "@/config";
+import { setLocalStorage } from "@/app/helper/storage";
 
 const SignIn = memo(() => {
   const {
@@ -49,9 +51,17 @@ const SignIn = memo(() => {
         },
         onSuccess: (data) => {
           console.log("Succ", data);
-          router.push(`/feed`);
-          setNotification({ status: 200, message: data.message });
-          dispatch(setAuthUser(data.result.user));
+          if (!data.isVerified) {
+            setNotification({ status: 202, message: data.message });
+            dispatch(setAuthUser(data.result.user));
+            setLocalStorage("email", data.result.user.email);
+
+            router.push(frontEndConfig.AUTH.REQUEST_VERIFICATION);
+          } else {
+            setNotification({ status: 200, message: data.message });
+            dispatch(setAuthUser(data.result.user));
+            router.push(frontEndConfig.PROTECTED.FEED);
+          }
           reset();
         },
       },
@@ -109,7 +119,7 @@ const SignIn = memo(() => {
             Create a new account
           </FieldDescription>
 
-          <Link href="/sign-up">
+          <Link href={frontEndConfig.AUTH.SIGN_UP}>
             <Button type="button" disabled={isSubmitting} className="w-full">
               Sign Up
             </Button>

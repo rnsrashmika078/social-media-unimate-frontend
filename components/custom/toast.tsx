@@ -40,9 +40,7 @@ const Toast = memo(() => {
       default:
         toast.info(notification.message);
     }
-
-    return () => setNotification(null);
-  }, [notification?.status]);
+  }, [notification]);
 
   return null;
 });

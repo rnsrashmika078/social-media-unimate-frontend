@@ -1,6 +1,7 @@
-import { mutationOptions } from "@tanstack/react-query";
+import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import {
   getAuthUser,
+  getUserProfile,
   resetPassword,
   signIn,
   signOut,
@@ -36,5 +37,12 @@ export function getAuthUserQuery() {
   return mutationOptions({
     mutationKey: ["auth-user"],
     mutationFn: getAuthUser,
+  });
+}
+export function getUserProfileQuery(userId: number, isMyProfile: boolean) {
+  return queryOptions({
+    enabled: !!isMyProfile,
+    queryKey: ["user-profile", userId],
+    queryFn: () => getUserProfile(userId),
   });
 }

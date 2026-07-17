@@ -7,24 +7,27 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import dynamic from "next/dynamic";
 import { useModalContext } from "@/app/providers/ModalProvider";
+import { SkeletonAvatar } from "../custom/skeletonAvatar";
 
 const AddPostModal = dynamic(() => import("../modal/AddPostModal"));
 const AddPost = memo(() => {
   const { isModelOpen, setIsModelOpen } = useModalContext();
   const authUser = useSelector((store: RootState) => store.auth.authUser);
 
+  if (!authUser) return <SkeletonAvatar />;
   return (
     <div className="select-none flex items-center text-start justify-center gap-2 border px-10 py-2 rounded-2xl bg-post-background">
       <Badge dp={authUser?.dp || ""} id={authUser?.id} />
       <Button
         variant={"outline"}
-        className=" w-full p-3 rounded-full"
+        className=" w-full p-5 rounded-full"
         onClick={() => {
           setHash("model");
           setIsModelOpen(true);
         }}
       >
-        Start a post
+        Welcome {authUser?.firstname}! What&apos;s on your mind
+        today..
       </Button>
 
       {isModelOpen && <AddPostModal />}

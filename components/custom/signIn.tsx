@@ -50,7 +50,6 @@ const SignIn = memo(() => {
           reset();
         },
         onSuccess: (data) => {
-          console.log("Succ", data);
           if (!data.isVerified) {
             setNotification({ status: 202, message: data.message });
             dispatch(setAuthUser(data.result.user));

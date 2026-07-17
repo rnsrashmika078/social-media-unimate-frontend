@@ -8,7 +8,7 @@ export const frontEndConfig = {
   },
   PROTECTED: {
     FEED: "/feed",
-    PROFILE: "/profile",
+    PROFILE: "/feed/profile",
   },
   API: {
     USER: "/api/auth-user",
@@ -23,7 +23,14 @@ export const backEndConfig = {
     SIGN_IN: "/auth/login",
     SIGN_UP: "/auth/register",
     USER: "/auth/user",
-    LOGOUT:"/auth/logout",
-    GET_USER_PROFILE: "/user/get-user-profile/",
+    LOGOUT: "/auth/logout",
+    GET_USER_PROFILE: "/user/user-profile?id=",
+  },
+  OTP: {
+    VERIFY: "/otp/verify",
+    REQUEST: "/otp/send",
+  },
+  FRIEND: {
+    SEARCH: "/friends?searchQuery=",
   },
 };

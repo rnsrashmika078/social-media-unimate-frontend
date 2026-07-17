@@ -15,14 +15,11 @@ const AuthSync = memo(() => {
 
   useEffect(() => {
     if (!authUser) {
-      console.log("render AuthSync");
       authUserMutate(undefined, {
         onSuccess: (data) => {
-          console.log("data", data);
-          dispatch(setAuthUser(data));
+          dispatch(setAuthUser(data?.result.user));
         },
         onError: (error: any) => {
-          console.log("error", error);
           const err = error?.response?.data?.message;
           toast.error(err);
 
@@ -30,7 +27,7 @@ const AuthSync = memo(() => {
         },
       });
     }
-  }, [authUser]);
+  }, [authUser, authUserMutate, dispatch]);
 
   return null;
 });

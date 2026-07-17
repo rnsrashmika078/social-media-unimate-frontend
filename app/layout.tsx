@@ -6,6 +6,7 @@ import { ReduxProvider } from "@/components/providers/reduxProvider";
 import QueryProvider from "./providers/queryClientProvider";
 import { AppProviders } from "./providers/AppProvider";
 import ToastProviderContainer from "@/components/custom/toast";
+import ReverbWebsocket from "./websocket/realtime";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -42,8 +43,9 @@ export default function RootLayout({
           <ReduxProvider>
             <AppProviders>
               <Theme />
+              <ReverbWebsocket />
               <ToastProviderContainer />
-              <div className="flex min-w-screen h-screen">{children}</div>
+              <div className="flex min-w-screen h-screen ">{children}</div>
             </AppProviders>
           </ReduxProvider>
         </QueryProvider>

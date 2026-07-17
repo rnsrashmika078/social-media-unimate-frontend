@@ -12,6 +12,7 @@ import { useInView } from "framer-motion";
 import Spinner from "../custom/spinner";
 import NotFound from "../custom/NotFound";
 
+
 const Post = memo(
   ({ posts, userId }: { posts: PostType[]; userId?: number | undefined }) => {
     const infiniteScroll = useRef<HTMLDivElement | null>(null);
@@ -55,6 +56,7 @@ const Post = memo(
 
     return (
       <div className="select-auto">
+       
         {allPosts && allPosts.length > 0 ? (
           allPosts.map((p) => {
             if (!p?.user) return;

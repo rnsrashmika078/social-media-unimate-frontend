@@ -50,3 +50,9 @@ export const VerifyOTPSchema = z.object({
   media_type: z.string().optional(),
 });
 export type VerifyOTPSchemaType = z.infer<typeof VerifyOTPSchema>;
+
+// search area
+export const searchAreaSchema = z.object({
+  searchText: z.string().optional(),
+});
+export type searchAreaType = z.infer<typeof searchAreaSchema>;

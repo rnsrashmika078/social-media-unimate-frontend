@@ -8,20 +8,34 @@ import {
   AiOutlineNotification,
   AiOutlineSlackSquare,
 } from "react-icons/ai";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { signOutQuery } from "@/app/queryOptions/authQuery";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { memo } from "react";
+import { memo, useState } from "react";
 import Badge from "./badge";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import { useTabContext } from "@/app/providers/TabProvider";
 import { useNotificationContext } from "@/app/providers/NotificationProvider";
+import { frontEndConfig } from "@/config";
+import { clearAuthCookie } from "@/app/helper/auth";
+import useDebounce from "@/app/hooks/useDebounce";
+
+import { searchFriendQuery } from "@/app/queryOptions/friendsQuery";
+import UserList from "./userlist";
 
 const NavBar = memo(() => {
   const { setActiveTab, activeTab } = useTabContext();
   const { setNotification } = useNotificationContext();
+  const [text, setText] = useState<string>("");
+  const router = useRouter();
+  const authUser = useSelector((store: RootState) => store.auth.authUser);
+
+  const debounceText = useDebounce(text ?? "", 1000);
+
+  const { data: friends } = useQuery(searchFriendQuery(debounceText ?? ""));
+
+  const { mutate: signOut } = useMutation(signOutQuery());
 
   const tabs = [
     { name: "Home", icon: AiOutlineHome, route: "/feed" },
@@ -32,10 +46,8 @@ const NavBar = memo(() => {
     },
     { name: "Logout", icon: AiOutlineLogout, route: "" },
   ];
-  const router = useRouter();
-  const { mutate: signOut } = useMutation(signOutQuery());
-  const authUser = useSelector((store: RootState) => store.auth.authUser);
 
+  console.log("friends", friends);
   return (
     <div className="sticky top-0 z-50 w-full bg-nav-color shadow-md px-4 md:px-10 py-2">
       <div className="flex flex-col md:flex-row items-center justify-between gap-3">
@@ -45,18 +57,22 @@ const NavBar = memo(() => {
             size={36}
           />
 
-          <div className="relative w-full md:w-72">
-            <Input
-              id="input-field-search-area"
-              type="text"
-              className="pl-10 pr-3 py-2 border border-gray-400 w-full text-sm md:text-base"
-              placeholder="Search your friend"
-            />
-            <SearchIcon
-              className="absolute top-1/2 left-3 -translate-y-1/2 text-icon-color"
-              size={18}
-            />
-          </div>
+          <form className="w-full">
+            <div className="relative w-full md:w-72">
+              <Input
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                type="text"
+                className="pl-10 pr-3 py-2 border border-gray-400 w-full text-sm md:text-base"
+                placeholder="Search your friend"
+              />
+              <UserList friends={friends} />
+              <SearchIcon
+                className="absolute top-1/2 left-3 -translate-y-1/2 text-icon-color"
+                size={18}
+              />
+            </div>
+          </form>
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full md:w-auto justify-between md:justify-center">
@@ -70,17 +86,8 @@ const NavBar = memo(() => {
                   ${activeTab === t.name ? "bg-active-tab" : "hover:bg-gray-200/20"}`}
                   onClick={async () => {
                     if (t.name.toLowerCase() === "logout") {
-                      await axios.post(
-                        "/api/logout",
-                        {},
-                        {
-                          headers: {
-                            Accept: "application/json",
-                            "content-type": "application/json",
-                          },
-                        },
-                      );
-                      router.push("/sign-in");
+                      await clearAuthCookie();
+                      router.push(frontEndConfig.AUTH.SIGN_IN);
                       await signOut(undefined, {
                         onError(error: any) {
                           setNotification({

@@ -94,7 +94,7 @@
   --nav-color: oklch(87.61% 0.0001 271.152);
   --active-tab: oklch(92.494% 0.00011 271.152);
   --post-background: oklch(100% 0.00011 271.152);
-  --feed-background: oklch(100% 0.00011 271.152);
+  --feed-background: oklch(100% 0.00011 271.152 / 0.701);
 }
 
 .dark {

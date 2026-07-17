@@ -1,23 +1,37 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
+import dynamic from "next/dynamic";
 import { RootState } from "@/app/store/store";
 import Image from "next/image";
-import React, { memo, useMemo } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { AuthUserType } from "@/app/types/globalTypes";
 import DefaultProfileImage from "@/public/images/profile.png";
 import DefaultBackgroundImage from "@/public/images/background.jpg";
-import Post from "../main/Post";
+import { getUserProfileQuery } from "@/app/queryOptions/authQuery";
+import { useQuery } from "@tanstack/react-query";
+import { AuthUserType } from "@/app/types/globalTypes";
+import { SkeletonCard } from "./skeletonCard";
+const Post = dynamic(() => import("../main/Post"));
 
-const Profile = memo(({ user }: { user: AuthUserType }) => {
-  // const { mutate: signOutMutate } = useMutation(signOutQuery());
+const Profile = memo(({ id }: { id: number }) => {
+  const [isMyProfile, setIsMyProfile] = useState<boolean>(true);
+  const { data: userData, isPending } = useQuery(
+    getUserProfileQuery(id, !isMyProfile),
+  );
   const authUser = useSelector((state: RootState) => state.auth.authUser);
 
-  const userProfile = useMemo(() => {
-    if (user.id === authUser?.id) return authUser;
-    return user;
-  }, [authUser, user]);
-  // bg-post-background
+  const userProfile: AuthUserType = useMemo(() => {
+    if (!authUser) return;
+
+    if (id === authUser?.id) {
+      setIsMyProfile(true);
+      return authUser;
+    }
+    setIsMyProfile(false);
+    return userData?.result?.user;
+  }, [authUser, id, userData]);
+
+  if (isPending) return <SkeletonCard />;
   return (
     <div className=" bg-post-background  border rounded-2xl  flex-col w-full h-[400px]">
       <div className="relative w-full  rounded-2xl h-full  items-start justify-start overflow-hidden">
@@ -37,14 +51,14 @@ const Profile = memo(({ user }: { user: AuthUserType }) => {
             className="w-50 h-50 flex bg-black rounded-full  border-2"
           />
           <h1 className="font-bold text-2xl">
-            {userProfile.firstname + " " + userProfile.lastname}
+            {userProfile?.firstname + " " + userProfile?.lastname}
           </h1>
-          <p>{userProfile.firstname + " " + userProfile.lastname}</p>
-          <p>{userProfile.email}</p>
+          <p>{userProfile?.firstname + " " + userProfile?.lastname}</p>
+          <p>{userProfile?.email}</p>
         </div>
       </div>
       <div className="flex w-full  mt-5 items-center justify-center">
-        <Post userId={userProfile.id} posts={[]} />
+        <Post userId={userProfile?.id} posts={[]} />
       </div>
     </div>
   );

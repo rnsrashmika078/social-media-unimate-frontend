@@ -1,6 +1,5 @@
 import axios from "axios";
-import { AuthUserType } from "../types/globalTypes";
-import api from "@/lib/axios";
+import { api } from "@/lib/axios";
 import { backEndConfig, frontEndConfig } from "@/config";
 
 const URI = process.env.NEXT_PUBLIC_API_URL!;
@@ -9,11 +8,9 @@ const BASE = process.env.NEXT_PUBLIC_BASE_URL!;
 export async function csrf() {
   await api.get(`${BASE}${backEndConfig.AUTH.CSRF}`);
 }
-
 export const signIn = async (data: { email: string; password: string }) => {
-  await csrf();
   const res = await api.post(backEndConfig.AUTH.SIGN_IN, data);
-
+  await setAuthCookie(res.data.success);
   return res.data;
 };
 export const signUp = async (data: {
@@ -25,9 +22,7 @@ export const signUp = async (data: {
   password_confirmation: string;
   dp: string;
 }) => {
-  await csrf();
   const res = await api.post(backEndConfig.AUTH.SIGN_UP, data);
-  console.log("res", res);
   return res.data;
 };
 export const resetPassword = async (data: {
@@ -43,18 +38,43 @@ export const resetPassword = async (data: {
   return res.data;
 };
 export const getAuthUser = async () => {
-  await csrf();
   const res = await api.get(backEndConfig.AUTH.USER);
+  console.log("res", res.data);
   return res.data;
 };
-export const getUserProfile = async (userId: number): Promise<AuthUserType> => {
-  const res = await axios.post(
-    `${URI}${backEndConfig.AUTH.GET_USER_PROFILE}${userId}`,
+export const getUserProfile = async (userId: number) => {
+  const res = await api.get(
+    `${backEndConfig.AUTH.GET_USER_PROFILE}${userId}`,
   );
+  console.log("RES", res);
   return res.data;
 };
 export const signOut = async () => {
-  await csrf();
   const res = await api.post(backEndConfig.AUTH.LOGOUT);
   return res.data;
+};
+export const clearAuthCookie = async () => {
+  await axios.post(
+    frontEndConfig.API.LOGOUT,
+    {},
+    {
+      headers: {
+        Accept: "application/json",
+        "content-type": "application/json",
+      },
+    },
+  );
+};
+export const setAuthCookie = async (enable: boolean = false) => {
+  if (!enable) return;
+  await axios.post(
+    frontEndConfig.API.SET_COOKIE,
+    {},
+    {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    },
+  );
 };

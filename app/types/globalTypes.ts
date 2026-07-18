@@ -57,3 +57,16 @@ export type ApiResponse<T = unknown> = {
   result: T | null;
   errors: Record<string, string[]> | null;
 };
+
+export type PrivateMessageType = {
+  message: string;
+  sender: AuthUserType;
+  userId: number;
+};
+
+export type NotificationType = {
+  id: number;
+  message: string;
+  created_at: string;
+  updated_at?: string;
+};

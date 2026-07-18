@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export function SkeletonCard() {
+const SkeletonCard = () => {
   return (
     <Card className="w-full h-full">
       <CardHeader>
@@ -12,5 +12,7 @@ export function SkeletonCard() {
         <Skeleton className="aspect-video w-full" />
       </CardContent>
     </Card>
-  )
-}
+  );
+};
+
+export default SkeletonCard;

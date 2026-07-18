@@ -12,7 +12,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { signOutQuery } from "@/app/queryOptions/authQuery";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import Badge from "./badge";
 import { useRouter } from "next/navigation";
 import { useTabContext } from "@/app/providers/TabProvider";
@@ -31,23 +31,31 @@ const NavBar = memo(() => {
   const router = useRouter();
   const authUser = useSelector((store: RootState) => store.auth.authUser);
 
-  const debounceText = useDebounce(text ?? "", 1000);
+  const debounceText = useDebounce(text ?? "", 500);
+  const [visited, setVisited] = useState<string[]>([]);
 
-  const { data: friends } = useQuery(searchFriendQuery(debounceText ?? ""));
+  const { data: friends, isFetched } = useQuery(
+    searchFriendQuery(debounceText ?? ""),
+  );
 
   const { mutate: signOut } = useMutation(signOutQuery());
 
-  const tabs = [
-    { name: "Home", icon: AiOutlineHome, route: "/feed" },
+  const [tabs, setTabs] = useState([
+    {
+      name: "Home",
+      icon: AiOutlineHome,
+      route: frontEndConfig.PROTECTED.FEED,
+      visited: false,
+    },
     {
       name: "Notification",
       icon: AiOutlineNotification,
-      route: "notification",
+      route: frontEndConfig.PROTECTED.NOTIFICATION,
+      visited: false,
     },
-    { name: "Logout", icon: AiOutlineLogout, route: "" },
-  ];
+    { name: "Logout", icon: AiOutlineLogout, route: "", visited: false },
+  ]);
 
-  console.log("friends", friends);
   return (
     <div className="sticky top-0 z-50 w-full bg-nav-color shadow-md px-4 md:px-10 py-2">
       <div className="flex flex-col md:flex-row items-center justify-between gap-3">
@@ -66,7 +74,7 @@ const NavBar = memo(() => {
                 className="pl-10 pr-3 py-2 border border-gray-400 w-full text-sm md:text-base"
                 placeholder="Search your friend"
               />
-              <UserList friends={friends} />
+              <UserList friends={friends} isLoading={isFetched} />
               <SearchIcon
                 className="absolute top-1/2 left-3 -translate-y-1/2 text-icon-color"
                 size={18}
@@ -82,9 +90,15 @@ const NavBar = memo(() => {
             return (
               <div key={idx}>
                 <span
-                  className={`flex flex-col items-center justify-center cursor-pointer px-3 py-2 rounded-xl transition-all text-xs md:text-sm whitespace-nowrap
+                  className={`flex relative flex-col items-center justify-center cursor-pointer px-3 py-2 rounded-xl transition-all text-xs md:text-sm whitespace-nowrap
                   ${activeTab === t.name ? "bg-active-tab" : "hover:bg-gray-200/20"}`}
                   onClick={async () => {
+                    setTabs((prev) =>
+                      prev.map((tb) =>
+                        tb.name === t.name ? { ...tb, visited: true } : tb,
+                      ),
+                    );
+
                     if (t.name.toLowerCase() === "logout") {
                       await clearAuthCookie();
                       router.push(frontEndConfig.AUTH.SIGN_IN);
@@ -108,6 +122,10 @@ const NavBar = memo(() => {
                     setActiveTab(t.name);
                   }}
                 >
+                  {t.name.toLowerCase() !== "logout" && !t.visited && (
+                    <span className="w-2 rounded-full right-2 top-2 h-2 absolute bg-red-500"></span>
+                  )}
+
                   <Icon size={22} />
                   <p className="hidden sm:block">{t.name}</p>
                 </span>

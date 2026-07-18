@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authSlicer from "./authSlice";
 import sessionSlicer from "./sessionSlice";
+import notificationSlicer from "./notificationSlicer";
 
 export const store = configureStore({
   reducer: {
     auth: authSlicer,
     session: sessionSlicer,
+    notification: notificationSlicer,
   },
 });
 

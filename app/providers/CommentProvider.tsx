@@ -1,5 +1,5 @@
 "use client";
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 
 type CommentContextType = {
   commentCount: number;
@@ -10,8 +10,16 @@ const CommentContext = createContext<CommentContextType | null>(null);
 
 export const CommentProvider = ({ children }: { children: ReactNode }) => {
   const [commentCount, setCommentCount] = useState<number>(0);
+
+  const memoizedValues = useMemo(
+    () => ({
+      commentCount,
+      setCommentCount,
+    }),
+    [commentCount],
+  );
   return (
-    <CommentContext.Provider value={{ commentCount, setCommentCount }}>
+    <CommentContext.Provider value={memoizedValues}>
       {children}
     </CommentContext.Provider>
   );

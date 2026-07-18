@@ -9,6 +9,7 @@ export const frontEndConfig = {
   PROTECTED: {
     FEED: "/feed",
     PROFILE: "/feed/profile",
+    NOTIFICATION: "/feed/notification",
   },
   API: {
     USER: "/api/auth-user",
@@ -32,5 +33,9 @@ export const backEndConfig = {
   },
   FRIEND: {
     SEARCH: "/friends?searchQuery=",
+    ADD: "/friends/add",
   },
+  NOTIFICATION: {
+    GET: "/notification",
+  },  
 };

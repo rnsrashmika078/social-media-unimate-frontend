@@ -39,9 +39,8 @@ export function getAuthUserQuery() {
     mutationFn: getAuthUser,
   });
 }
-export function getUserProfileQuery(userId: number, isMyProfile: boolean) {
+export function getUserProfileQuery(userId: number) {
   return queryOptions({
-    enabled: !!isMyProfile,
     queryKey: ["user-profile", userId],
     queryFn: () => getUserProfile(userId),
   });

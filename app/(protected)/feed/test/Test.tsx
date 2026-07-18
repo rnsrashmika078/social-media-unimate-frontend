@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { sendPublicMessage, sendPrivateMessage } from "@/app/helper/realtime";
+import {  sendPrivateMessage } from "@/app/helper/realtime";
 
 const Test = () => {
   return (

@@ -1,5 +1,5 @@
 "use client";
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 type LikeCountType = { post_id: number; isLiked: boolean };
 
 type LikeContextType = {
@@ -14,8 +14,15 @@ export const LikeProvider = ({ children }: { children: ReactNode }) => {
     isLiked: false,
     post_id: 0,
   });
+  const memoizedValues = useMemo(
+    () => ({
+      likeCount,
+      setLikeCount,
+    }),
+    [likeCount],
+  );
   return (
-    <LikeContext.Provider value={{ likeCount, setLikeCount }}>
+    <LikeContext.Provider value={memoizedValues}>
       {children}
     </LikeContext.Provider>
   );

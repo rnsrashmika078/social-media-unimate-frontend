@@ -1,5 +1,5 @@
 "use client";
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 
 type TabContextType = {
   activeTab: string;
@@ -10,10 +10,17 @@ const TabContext = createContext<TabContextType | null>(null);
 
 export const TabProvider = ({ children }: { children: ReactNode }) => {
   const [activeTab, setActiveTab] = useState<string>("Home");
+
+  const memoizedValue = useMemo(
+    () => ({
+      activeTab,
+      setActiveTab,
+    }),
+    [activeTab],
+  );
+
   return (
-    <TabContext.Provider value={{ activeTab, setActiveTab }}>
-      {children}
-    </TabContext.Provider>
+    <TabContext.Provider value={memoizedValue}>{children}</TabContext.Provider>
   );
 };
 

@@ -7,18 +7,20 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { csrf } from "../helper/auth";
 import { api } from "@/lib/axios";
+import { useNotificationContext } from "../providers/NotificationProvider";
+import { PrivateMessageType } from "../types/globalTypes";
 
 interface WebsocketProps {
   channelType?: "public" | "private" | "presence";
 }
 const ReverbWebsocket = memo(({ channelType = "private" }: WebsocketProps) => {
   const [echoInstance, setEchoInstance] = useState<any | null>(null);
-  // const [csrfReady, setCsrfReady] = useState(false);
+  const { setNotification } = useNotificationContext();
+  const authUser = useSelector((store: RootState) => store.auth.authUser);
 
   useEffect(() => {
     const initCsrf = async () => {
       await csrf();
-      // setCsrfReady(true);
     };
     initCsrf();
   }, []);
@@ -68,19 +70,21 @@ const ReverbWebsocket = memo(({ channelType = "private" }: WebsocketProps) => {
     };
   }, []);
 
-  const authUser = useSelector((store: RootState) => store.auth.authUser);
-
   const enablePrivate = useCallback(() => {
     if (!echoInstance || !authUser) return;
-    console.log("authUser.id",authUser.id);
 
     const privateChannelName = `private-social-channel.user.${authUser.id}`;
     const privateEventName = ".PrivateChannelEvent";
 
     const privateChannel = echoInstance.private(privateChannelName);
     privateChannel
-      .listen(privateEventName, (e: any) => {
+      .listen(privateEventName, (e: PrivateMessageType) => {
         console.log("Private Event received!", e);
+        setNotification({
+          message: e.message,
+          status: 200,
+          type: "application",
+        });
       })
       .error((error: any) => {
         console.error("Failed to subscribe to private channel:", error);
@@ -89,7 +93,7 @@ const ReverbWebsocket = memo(({ channelType = "private" }: WebsocketProps) => {
       privateChannel.stopListening(privateEventName);
       echoInstance.leaveChannel(privateChannelName);
     };
-  }, [authUser, echoInstance]);
+  }, [authUser, echoInstance, setNotification]);
 
   const enablePublic = useCallback(() => {
     if (!echoInstance) return;

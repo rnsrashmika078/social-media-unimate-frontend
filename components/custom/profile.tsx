@@ -3,20 +3,21 @@
 import dynamic from "next/dynamic";
 import { RootState } from "@/app/store/store";
 import Image from "next/image";
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import DefaultProfileImage from "@/public/images/profile.png";
 import DefaultBackgroundImage from "@/public/images/background.jpg";
 import { getUserProfileQuery } from "@/app/queryOptions/authQuery";
 import { useQuery } from "@tanstack/react-query";
 import { AuthUserType } from "@/app/types/globalTypes";
-import { SkeletonCard } from "./skeletonCard";
+
 const Post = dynamic(() => import("../main/Post"));
+const SkeletonCard = dynamic(() => import("./skeletonCard"));
 
 const Profile = memo(({ id }: { id: number }) => {
   const [isMyProfile, setIsMyProfile] = useState<boolean>(true);
   const { data: userData, isPending } = useQuery(
-    getUserProfileQuery(id, !isMyProfile),
+    getUserProfileQuery(id),
   );
   const authUser = useSelector((state: RootState) => state.auth.authUser);
 

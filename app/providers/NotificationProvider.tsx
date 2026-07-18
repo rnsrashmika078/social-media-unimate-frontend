@@ -1,8 +1,9 @@
 "use client";
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 export type NotificationType = {
   status: number;
   message: string;
+  type?: "system" | "application";
 };
 
 type NotificationContextType = {
@@ -10,6 +11,7 @@ type NotificationContextType = {
   setNotification: React.Dispatch<
     React.SetStateAction<NotificationType | null>
   >;
+  
 };
 
 const NotificationContext = createContext<NotificationContextType | null>(null);
@@ -18,8 +20,16 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   const [notification, setNotification] = useState<NotificationType | null>(
     null,
   );
+  const memoizedValue = useMemo(
+    () => ({
+      notification,
+      setNotification,
+    }),
+    [notification],
+  );
+
   return (
-    <NotificationContext.Provider value={{ notification, setNotification }}>
+    <NotificationContext.Provider value={memoizedValue}>
       {children}
     </NotificationContext.Provider>
   );

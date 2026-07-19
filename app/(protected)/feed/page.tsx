@@ -3,7 +3,6 @@ import AddPost from "@/components/main/AddPost";
 import Post from "@/components/main/Post";
 const FeedPage = async () => {
   const posts = await getPosts({ page: 1 });
-  console.log("re render FeedPage")
 
   return (
     <>

@@ -1,10 +1,9 @@
 import { backEndConfig } from "@/config";
 import { api } from "@/lib/axios";
 
-export const getNotification = async (id: number) => {
+export const getNotification = async (id: number, noCache: string) => {
   const res = await api.get(backEndConfig.NOTIFICATION.GET, {
-    params: { id },
+    params: { id, noCache },
   });
-  console.log(res);
   return res?.data?.result?.notification;
 };

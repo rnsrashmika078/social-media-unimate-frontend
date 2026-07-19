@@ -13,7 +13,6 @@ const AuthSync = memo(() => {
   const authUser = useSelector((state: RootState) => state.auth.authUser);
   const dispatch = useDispatch<AppDispatch>();
 
-  console.log("RENDER AUTH SYNC")
   // useEffect(() => {
   //   if (!authUser) return;
   //   console.log("data", notification);  

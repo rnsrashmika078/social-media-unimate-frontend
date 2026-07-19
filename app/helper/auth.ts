@@ -9,6 +9,7 @@ export async function csrf() {
   await api.get(`${BASE}${backEndConfig.AUTH.CSRF}`);
 }
 export const signIn = async (data: { email: string; password: string }) => {
+  await csrf();
   const res = await api.post(backEndConfig.AUTH.SIGN_IN, data);
   await setAuthCookie(res.data.success);
   return res.data;
@@ -22,6 +23,7 @@ export const signUp = async (data: {
   password_confirmation: string;
   dp: string;
 }) => {
+  await csrf();
   const res = await api.post(backEndConfig.AUTH.SIGN_UP, data);
   return res.data;
 };
@@ -39,14 +41,10 @@ export const resetPassword = async (data: {
 };
 export const getAuthUser = async () => {
   const res = await api.get(backEndConfig.AUTH.USER);
-  console.log("res", res.data);
   return res.data;
 };
 export const getUserProfile = async (userId: number) => {
-  const res = await api.get(
-    `${backEndConfig.AUTH.GET_USER_PROFILE}${userId}`,
-  );
-  console.log("RES", res);
+  const res = await api.get(`${backEndConfig.AUTH.GET_USER_PROFILE}${userId}`);
   return res.data;
 };
 export const signOut = async () => {

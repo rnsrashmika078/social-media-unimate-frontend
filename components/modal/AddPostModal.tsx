@@ -26,7 +26,7 @@ const AddPostModal = () => {
     handleSubmit,
     getValues,
     setValues,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     reset,
   } = useForm<addPostSchemaType>({
     resolver: zodResolver(addPostSchema),
@@ -67,7 +67,6 @@ const AddPostModal = () => {
   const [url, setUrl] = useState<string | null>(null);
 
   const queryClient = useQueryClient();
-
 
   // form submition
   const onSubmit = async (data: addPostSchemaType) => {
@@ -111,8 +110,6 @@ const AddPostModal = () => {
   // }, [setValues, stream.messages]);
 
   const { setIsModelOpen } = useModalContext();
-
-
 
   return (
     <div className="fixed z-50 left-0 top-0 w-full h-full bg-opacity-50 backdrop-blur-sm">

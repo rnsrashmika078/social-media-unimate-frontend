@@ -12,15 +12,17 @@ const UserList = memo(
     isLoading: boolean;
     friends: AuthUserType[] | undefined;
   }) => {
-    if (!friends) return;
-    if (friends.length == 0) {
-      return <p className="absolute top-10 left-0">No User Found</p>;
+    if (friends && friends.length == 0) {
+      return (
+        <p className="absolute top-10 left-0 overflow-hidden">No User Found</p>
+      );
     }
+
     return (
-      <div className="absolute  max-h-[400px] custom-scrollbar-y  top-8 left-0 rounded-2xl z-0 p-2 w-full bg-accent ">
-        {!isLoading && (
+      <div className="absolute  max-h-[400px] min-h-[40px] custom-scrollbar-y top-8 left-0 rounded-2xl z-100 p-2 w-full bg-accent ">
+        {isLoading && (
           <div className="flex animate-spin items-center justify-center p-5 overflow-hidden w-full">
-            <FaSpinner size={20} />
+            <FaSpinner size={15} />
           </div>
         )}
         {friends &&

@@ -32,10 +32,12 @@ export const backEndConfig = {
     REQUEST: "/otp/send",
   },
   FRIEND: {
-    SEARCH: "/friends?searchQuery=",
-    ADD: "/friends/add",
+    SEARCH: "/friends",
+    GET: "/friends/list",
+    SEND: "/friends/add",
+    ACCEPT: "/friends/accept",
   },
   NOTIFICATION: {
     GET: "/notification",
-  },  
+  },
 };

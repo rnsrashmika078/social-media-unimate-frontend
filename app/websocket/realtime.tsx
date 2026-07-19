@@ -9,6 +9,7 @@ import { csrf } from "../helper/auth";
 import { api } from "@/lib/axios";
 import { useNotificationContext } from "../providers/NotificationProvider";
 import { PrivateMessageType } from "../types/globalTypes";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface WebsocketProps {
   channelType?: "public" | "private" | "presence";
@@ -17,7 +18,7 @@ const ReverbWebsocket = memo(({ channelType = "private" }: WebsocketProps) => {
   const [echoInstance, setEchoInstance] = useState<any | null>(null);
   const { setNotification } = useNotificationContext();
   const authUser = useSelector((store: RootState) => store.auth.authUser);
-
+  const queryClient = useQueryClient();
   useEffect(() => {
     const initCsrf = async () => {
       await csrf();
@@ -80,6 +81,12 @@ const ReverbWebsocket = memo(({ channelType = "private" }: WebsocketProps) => {
     privateChannel
       .listen(privateEventName, (e: PrivateMessageType) => {
         console.log("Private Event received!", e);
+
+        if (e.message.includes("accepted")) {
+          queryClient.invalidateQueries({
+            queryKey: ["get-friends-list"],
+          });
+        }
         setNotification({
           message: e.message,
           status: 200,
@@ -93,7 +100,7 @@ const ReverbWebsocket = memo(({ channelType = "private" }: WebsocketProps) => {
       privateChannel.stopListening(privateEventName);
       echoInstance.leaveChannel(privateChannelName);
     };
-  }, [authUser, echoInstance, setNotification]);
+  }, [authUser, echoInstance, queryClient, setNotification]);
 
   const enablePublic = useCallback(() => {
     if (!echoInstance) return;

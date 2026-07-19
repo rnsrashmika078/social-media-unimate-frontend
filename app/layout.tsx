@@ -43,7 +43,6 @@ export default function RootLayout({
           <ReduxProvider>
             <AppProviders>
               <Theme />
-              <ReverbWebsocket />
               <ToastProviderContainer />
               <div className="flex min-w-screen h-screen ">{children}</div>
             </AppProviders>

@@ -1,5 +1,5 @@
 import { api } from "@/lib/axios";
-import { setAuthCookie } from "./auth";
+import { csrf, setAuthCookie } from "./auth";
 import { backEndConfig } from "@/config";
 
 export const verify = async (data: {
@@ -8,6 +8,7 @@ export const verify = async (data: {
   media_type: string;
   code: number;
 }) => {
+  await csrf();
   const res = await api.post(backEndConfig.OTP.VERIFY, data);
   await setAuthCookie(res.data.success);
   return res.data;

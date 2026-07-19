@@ -1,6 +1,12 @@
 import { mutationOptions, queryOptions } from "@tanstack/react-query";
-import { addFriend, searchFriend, sendRequest } from "../helper/friends";
-import { AuthUserType } from "../types/globalTypes";
+import {
+  acceptRequest,
+  addFriend,
+  getFriends,
+  searchFriend,
+  sendRequest,
+} from "../helper/friends";
+import { AuthUserType, FriendsType } from "../types/globalTypes";
 
 export function searchFriendQuery(searchQuery: string) {
   return queryOptions({
@@ -15,31 +21,16 @@ export function addFriendQuery() {
     mutationFn: addFriend,
   });
 }
-export function sendRequestQuery(searchQuery: string) {
-  return queryOptions({
-    enabled: !!searchQuery,
-    queryKey: ["send-request"],
-    queryFn: (): Promise<AuthUserType[]> => sendRequest(searchQuery),
+export function acceptRequestQuery() {
+  return mutationOptions({
+    mutationKey: ["accept-request"],
+    mutationFn: acceptRequest,
   });
 }
-export function getSendRequestsQuery(searchQuery: string) {
+export function getFriendsQuery(id: number) {
   return queryOptions({
-    enabled: !!searchQuery,
-    queryKey: ["search-friend", searchQuery],
-    queryFn: (): Promise<AuthUserType[]> => searchFriend(searchQuery),
-  });
-}
-export function getReceivedRequestsQuery(searchQuery: string) {
-  return queryOptions({
-    enabled: !!searchQuery,
-    queryKey: ["search-friend", searchQuery],
-    queryFn: (): Promise<AuthUserType[]> => searchFriend(searchQuery),
-  });
-}
-export function acceptFriendRequestQuery(searchQuery: string) {
-  return queryOptions({
-    enabled: !!searchQuery,
-    queryKey: ["search-friend", searchQuery],
-    queryFn: (): Promise<AuthUserType[]> => searchFriend(searchQuery),
+    enabled: !!id,
+    queryKey: ["get-friends-list"],
+    queryFn: (): Promise<FriendsType[]> => getFriends(id),
   });
 }

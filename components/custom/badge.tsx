@@ -10,7 +10,6 @@ import { RootState } from "@/app/store/store";
 import { useMutation } from "@tanstack/react-query";
 import { addFriendQuery } from "@/app/queryOptions/friendsQuery";
 import { useNotificationContext } from "@/app/providers/NotificationProvider";
-import { sendPrivateMessage } from "@/app/helper/realtime";
 interface BadgeProps {
   dp?: string;
   id?: number;
@@ -34,12 +33,12 @@ const Badge = memo(
         dp?: string;
         id: number;
       }) => {
-        sendPrivateMessage({
-          message: `You have new friend request from ${authUser?.firstname} ${authUser?.lastname}`,
-          receiver_id: data.id,
-        });
+        // sendPrivateMessage({
+        //   receiver_id: data.id,
+        // });
         mutate(
           {
+            message: `You have new friend request from ${authUser?.firstname} ${authUser?.lastname}`,
             receiver_id: data.id,
           },
           {
@@ -61,7 +60,7 @@ const Badge = memo(
       [authUser?.firstname, authUser?.lastname, mutate, setNotification],
     );
     return (
-      <Link href={`${frontEndConfig.PROTECTED.PROFILE}/${id}`}>
+      <Link href={id ? `${frontEndConfig.PROTECTED.PROFILE}/${id}` : "/feed"}>
         <div
           onClick={() => {
             onClick?.();
@@ -71,7 +70,7 @@ const Badge = memo(
           {dp && dp ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={dp}  
+              src={dp}
               alt="display picture"
               width={48}
               height={48}

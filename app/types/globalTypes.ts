@@ -8,7 +8,15 @@ export type AuthUserType = {
   updated_at: string;
   created_at: string;
   id: number;
+  friends?: AuthUserType[];
 };
+
+export type TypeOfNotifications =
+  | "friend-request-received"
+  | "friend-request-sent"
+  | "my-post"
+  | "others-post"
+  | "post-reaction";
 
 export type PostType = {
   id: number;
@@ -67,6 +75,20 @@ export type PrivateMessageType = {
 export type NotificationType = {
   id: number;
   message: string;
+  receiver_id: number;
+  sender_id: number;
   created_at: string;
+  receiver: AuthUserType;
+  sender: AuthUserType;
   updated_at?: string;
+  is_send_by_me: boolean;
 };
+
+export type FriendsType = {
+  status: "pending" | "accepted";
+  sender_id: number;
+  receiver_id: number;
+  sender: AuthUserType;
+  receiver: AuthUserType;
+  is_send_by_me: boolean;
+} & AuthUserType;

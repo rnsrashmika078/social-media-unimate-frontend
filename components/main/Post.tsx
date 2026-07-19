@@ -14,7 +14,6 @@ import NotFound from "../custom/NotFound";
 
 const Post = memo(
   ({ posts, userId }: { posts: PostType[]; userId?: number | undefined }) => {
-    console.log("POST re render");
     const infiniteScroll = useRef<HTMLDivElement | null>(null);
     const isInView = useInView(infiniteScroll, { once: false });
 

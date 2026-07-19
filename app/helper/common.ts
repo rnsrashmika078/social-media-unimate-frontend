@@ -1,4 +1,9 @@
 import { Message } from "@langchain/core/messages";
+import {
+  FriendsType,
+  NotificationType,
+  TypeOfNotifications,
+} from "../types/globalTypes";
 
 export const setHash = (value: string) => {
   if (typeof window === "undefined") return;
@@ -62,4 +67,19 @@ export const extractContent = (msg: Message): string => {
     return msg.content;
   }
   return msg.content;
+};
+
+export const modifyNotifyMessage = (data: NotificationType): string => {
+  if (data.is_send_by_me) {
+    return `You have sent friend request to  ${data.receiver?.firstname} ${data.receiver?.lastname}`;
+  } else {
+    return `You have received friend request from ${data.sender?.firstname} ${data.sender?.lastname}`;
+  }
+};
+export const modifyFriendsList = (data: FriendsType): string => {
+  if (data.is_send_by_me) {
+    return `${data.receiver?.firstname} ${data.receiver?.lastname}`;
+  } else {
+    return `${data.sender?.firstname} ${data.sender?.lastname}`;
+  }
 };

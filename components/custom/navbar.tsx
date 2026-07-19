@@ -1,42 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { Input } from "../ui/input";
-import { SearchIcon } from "lucide-react";
 import {
   AiOutlineHome,
   AiOutlineLogout,
   AiOutlineNotification,
   AiOutlineSlackSquare,
 } from "react-icons/ai";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { signOutQuery } from "@/app/queryOptions/authQuery";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { memo, useEffect, useState } from "react";
+import { memo, useState } from "react";
 import Badge from "./badge";
 import { useRouter } from "next/navigation";
 import { useTabContext } from "@/app/providers/TabProvider";
 import { useNotificationContext } from "@/app/providers/NotificationProvider";
 import { frontEndConfig } from "@/config";
 import { clearAuthCookie } from "@/app/helper/auth";
-import useDebounce from "@/app/hooks/useDebounce";
-
-import { searchFriendQuery } from "@/app/queryOptions/friendsQuery";
-import UserList from "./userlist";
+import SearchArea from "./searchArea";
 
 const NavBar = memo(() => {
   const { setActiveTab, activeTab } = useTabContext();
   const { setNotification } = useNotificationContext();
-  const [text, setText] = useState<string>("");
+
   const router = useRouter();
   const authUser = useSelector((store: RootState) => store.auth.authUser);
-
-  const debounceText = useDebounce(text ?? "", 500);
-  const [visited, setVisited] = useState<string[]>([]);
-
-  const { data: friends, isFetched } = useQuery(
-    searchFriendQuery(debounceText ?? ""),
-  );
 
   const { mutate: signOut } = useMutation(signOutQuery());
 
@@ -65,28 +53,12 @@ const NavBar = memo(() => {
             size={36}
           />
 
-          <form className="w-full">
-            <div className="relative w-full md:w-72">
-              <Input
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                type="text"
-                className="pl-10 pr-3 py-2 border border-gray-400 w-full text-sm md:text-base"
-                placeholder="Search your friend"
-              />
-              <UserList friends={friends} isLoading={isFetched} />
-              <SearchIcon
-                className="absolute top-1/2 left-3 -translate-y-1/2 text-icon-color"
-                size={18}
-              />
-            </div>
-          </form>
+          <SearchArea />
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full md:w-auto justify-between md:justify-center">
           {tabs.map((t, idx) => {
             const Icon = t.icon;
-
             return (
               <div key={idx}>
                 <span

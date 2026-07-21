@@ -1,5 +1,11 @@
 import { mutationOptions, queryOptions } from "@tanstack/react-query";
-import { addComment, addLike, addPost, deletePost, getPostComments } from "../helper/posts";
+import {
+  addComment,
+  addLike,
+  addPost,
+  deletePost,
+  getPostComments,
+} from "../helper/posts";
 import { CommentType } from "../types/globalTypes";
 
 // get post done inside server

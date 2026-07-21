@@ -40,8 +40,12 @@ export const resetPassword = async (data: {
   return res.data;
 };
 export const getAuthUser = async () => {
-  const res = await api.get(backEndConfig.AUTH.USER);
-  return res.data;
+  try {
+    const res = await api.get(backEndConfig.AUTH.USER);
+    return res.data;
+  } catch (e) { 
+    await clearAuthCookie();
+  }
 };
 export const getUserProfile = async (userId: number) => {
   const res = await api.get(`${backEndConfig.AUTH.GET_USER_PROFILE}${userId}`);

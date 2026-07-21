@@ -2,17 +2,18 @@
 import { getNotificationQuery } from "@/app/queryOptions/notificationQuery";
 import { RootState } from "@/app/store/store";
 import { NotificationType } from "@/app/types/globalTypes";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { memo, useCallback, useState } from "react";
 import { AiFillBell } from "react-icons/ai";
-import { FaSpinner } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import { modifyNotifyMessage } from "@/app/helper/common";
 import { RefreshCcw } from "lucide-react";
-import { acceptRequestQuery } from "@/app/queryOptions/friendsQuery";
 import Link from "next/link";
 import { frontEndConfig } from "@/config";
+import dynamic from "next/dynamic";
+
+const EmptyList = dynamic(() => import("../profile/EmptyList"));
 
 const NotificationWrapper = memo(() => {
   const [noCache, setNoCache] = useState<string>("no-required");
@@ -22,8 +23,6 @@ const NotificationWrapper = memo(() => {
     isFetching,
     refetch,
   } = useQuery(getNotificationQuery(authUserId, noCache));
-
-  const { mutate } = useMutation(acceptRequestQuery());
 
   return (
     <div className="">
@@ -58,23 +57,14 @@ interface NotificationProps {
   authUserId: number;
 }
 const Notification = ({ notify, isLoading, authUserId }: NotificationProps) => {
-  const handleSubmission = useCallback(() => {}, []);
-
   if (!authUserId) return;
   if (!notify || notify.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center text-foreground">
-        {isLoading ? (
-          <div className="flex animate-spin items-center justify-center p-5 overflow-hidden w-full">
-            <FaSpinner size={15} />
-          </div>
-        ) : (
-          <>
-            <AiFillBell size={40} className="mb-2 opacity-60" />
-            <p className="text-sm">No notifications yet</p>
-          </>
-        )}
-      </div>
+      <EmptyList
+        condition={isLoading}
+        icon={AiFillBell}
+        description="No Notification yet"
+      />
     );
   }
 
@@ -90,10 +80,7 @@ const Notification = ({ notify, isLoading, authUserId }: NotificationProps) => {
           </div>
 
           <div className="flex-1">
-            <p className="text-sm">
-              {/* {authUser.id !== n.sender_id ? n.message : null} */}
-              {modifyNotifyMessage(n)}
-            </p>
+            <p className="text-sm">{modifyNotifyMessage(n)}</p>
             <p className="text-sm">{authUserId !== n.sender_id}</p>
             {n.created_at && (
               <span className="text-xs text-gray-500">

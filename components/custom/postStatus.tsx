@@ -1,8 +1,9 @@
+"use client";
 import { memo } from "react";
 
 interface PostStatusProps {
-  likeCount: number;
-  commentCount: number;
+  likeCount: number | undefined;
+  commentCount: number | undefined;
 }
 const PostStatus = memo(({ likeCount, commentCount }: PostStatusProps) => {
   return (

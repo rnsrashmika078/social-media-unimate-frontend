@@ -9,6 +9,8 @@ export type AuthUserType = {
   created_at: string;
   id: number;
   friends?: AuthUserType[];
+  is_friend?: boolean;
+  is_friend_2?: boolean;
 };
 
 export type TypeOfNotifications =
@@ -70,6 +72,7 @@ export type PrivateMessageType = {
   message: string;
   sender: AuthUserType;
   userId: number;
+  type: string;
 };
 
 export type NotificationType = {
@@ -91,4 +94,5 @@ export type FriendsType = {
   sender: AuthUserType;
   receiver: AuthUserType;
   is_send_by_me: boolean;
+  id: number;
 } & AuthUserType;

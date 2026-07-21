@@ -1,22 +1,33 @@
 "use client";
-import { memo, useEffect, useMemo, useRef } from "react";
-import UserPlate from "../custom/user_plate";
-import Card from "../custom/card";
-import Description from "../custom/description";
-import ReactBar from "../custom/react_bar";
+import dynamic from "next/dynamic";
+
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { PostType } from "@/app/types/globalTypes";
-import PostStatus from "../custom/postStatus";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getPosts } from "@/app/helper/posts";
 import { useInView } from "framer-motion";
-import Spinner from "../custom/spinner";
-import NotFound from "../custom/NotFound";
+import Bottom from "./Bottom";
+
+const UserPlate = dynamic(() => import("../custom/user_plate"), { ssr: false });
+const ReactBar = dynamic(() => import("../custom/react_bar"), { ssr: false });
+
+const Description = dynamic(() => import("../custom/description"), {
+  ssr: false,
+});
+const Card = dynamic(() => import("../custom/card"), { ssr: false });
+const PostStatus = dynamic(() => import("../custom/postStatus"), {
+  ssr: false,
+});
+const NotFound = dynamic(() => import("../custom/NotFound"), { ssr: false });
+const Spinner = dynamic(() => import("../custom/spinner"), { ssr: false });
 
 const Post = memo(
   ({ posts, userId }: { posts: PostType[]; userId?: number | undefined }) => {
     const infiniteScroll = useRef<HTMLDivElement | null>(null);
     const isInView = useInView(infiniteScroll, { once: false });
-
+    const [likedUser, setLikedUser] = useState<{ id: number }[] | undefined>(
+      undefined,
+    );
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
       useInfiniteQuery({
         queryKey: ["getPosts", userId],
@@ -25,7 +36,7 @@ const Post = memo(
         initialData: {
           pages: [
             {
-              data: posts,
+              result: posts,
               currentPage: 1,
               hasMore: true,
             },
@@ -40,7 +51,7 @@ const Post = memo(
       });
 
     const allPosts = useMemo(() => {
-      return data?.pages.flatMap((page) => page?.data) as PostType[];
+      return data?.pages.flatMap((page) => page.result) as PostType[];
     }, [data?.pages]);
 
     useEffect(() => {
@@ -53,42 +64,42 @@ const Post = memo(
       fetchWait();
     }, [fetchNextPage, hasNextPage, isFetchingNextPage, isInView]);
 
+    useEffect(() => {
+      setLikedUser(allPosts.flatMap((p) => p.liked_by_users));
+    }, [allPosts]);
+
+    if (!allPosts || allPosts?.length === 0) return <NotFound />;
+
     return (
       <div className="select-auto">
-        {allPosts && allPosts.length > 0 ? (
-          allPosts.map((p) => {
-            if (!p?.user) return;
-            return (
-              <div
-                className="border rounded-2xl p-5 mt-2 bg-post-background"
-                key={p.id}
-              >
-                {/* date may htrow hydration error */}
-                <UserPlate
-                  postId={p.id}
-                  username={p.user.firstname + " " + p.user.lastname}
-                  jobTitle="Undergraduate"
-                  profileImage={p.user.dp}
-                  date={p.created_at}
-                  datePosition="bottom"
-                  settings={true}
-                />
-                <Description desc={p.content} />
-                {p.attachment && (
-                  <Card title={p.content} image={p.attachment} />
-                )}
-                <PostStatus
-                  commentCount={p.comments_count}
-                  likeCount={p.liked_by_users_count}
-                />
-                <hr className=""></hr>
-                <ReactBar postId={p.id} likedUsersId={p.liked_by_users} />
-              </div>
-            );
-          })
-        ) : (
-          <NotFound />
-        )}
+        {allPosts.map((p) => {
+          if (!p?.user) return;
+          return (
+            <div
+              className="border rounded-2xl p-5 mt-2 bg-post-background"
+              key={p.id}
+            >
+              {/* date may thrw hydration error */}
+              <UserPlate
+                postId={p.id}
+                username={p.user.firstname + " " + p.user.lastname}
+                jobTitle="Undergraduate"
+                profileImage={p.user.dp}
+                date={p.created_at}
+                datePosition="bottom"
+                settings={true}
+              />
+              <Description desc={p.content} />
+              {p.attachment && <Card title={p.content} image={p.attachment} />}
+              <Bottom
+                comments_count={p.comments_count}
+                liked_by_users={p.liked_by_users}
+                liked_by_users_count={p.liked_by_users_count}
+                postId={p.id}
+              />
+            </div>
+          );
+        })}
         <div ref={infiniteScroll}></div>
         <Spinner isLoading={isInView && hasNextPage} />
       </div>

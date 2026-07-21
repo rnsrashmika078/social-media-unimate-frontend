@@ -33,9 +33,6 @@ const Badge = memo(
         dp?: string;
         id: number;
       }) => {
-        // sendPrivateMessage({
-        //   receiver_id: data.id,
-        // });
         mutate(
           {
             message: `You have new friend request from ${authUser?.firstname} ${authUser?.lastname}`,

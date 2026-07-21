@@ -14,7 +14,6 @@ export const replaceHash = () => {
   window.history.replaceState(null, "", `#`);
 };
 export const convertDateTime = (date: string) => {
-  // hydration error can be occrred
   const today = new Date().getDate();
   const thisMonth = new Date().getMonth();
 

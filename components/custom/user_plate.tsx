@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { EllipsisVertical } from "lucide-react";
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import DefaultProfileImage from "@/public/images/profile.png";
 import { convertDateTime } from "@/app/helper/common";
 import {
@@ -11,7 +11,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Image from "next/image";
 import { useMutation } from "@tanstack/react-query";
 import { deletePostQuery } from "@/app/queryOptions/postQuery";
 import { useQueryClient } from "@tanstack/react-query";
@@ -41,6 +40,13 @@ const UserPlate = memo(
     const { mutate: deletePostMutation } = useMutation(deletePostQuery());
     const queryClient = useQueryClient();
 
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+      setMounted(true);
+    }, []);
+
+    if (!mounted) return;
     return (
       <div className="flex items-center justify-between gap-5  w-full select-none">
         <div className="flex gap-3 items-center">

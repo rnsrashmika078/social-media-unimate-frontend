@@ -4,16 +4,9 @@ type DescriptionProp = {
   desc?: string;
 };
 const Description = memo(({ desc }: DescriptionProp) => {
-  const text = ` 
-    Labrador  
-    Burnese Mountain Dog`;
-
-
   return (
-    <div className="w-full p-2 text-sm">
+    <div className="w-full p-2 text-sm break-words overflow-hidden">
       <ReactMarkdown>{desc}</ReactMarkdown>
-
-      {/* {desc} */}
     </div>
   );
 });

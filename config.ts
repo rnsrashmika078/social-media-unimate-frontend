@@ -27,6 +27,13 @@ export const backEndConfig = {
     LOGOUT: "/auth/logout",
     GET_USER_PROFILE: "/user/user-profile?id=",
   },
+  POST: {
+    ADD: "/post/add",
+    GET: "/post/",
+    ADD_COMMENT: "/post/comment",
+    GET_COMMENTS: "/post/comment",
+    LIKE: "/post/like",
+  },
   OTP: {
     VERIFY: "/otp/verify",
     REQUEST: "/otp/send",

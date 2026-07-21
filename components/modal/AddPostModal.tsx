@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useCallback, useMemo, useState } from "react";
 import { FieldLabel } from "../ui/field";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -19,6 +20,8 @@ import {
   useStream,
 } from "@langchain/langgraph-sdk/react";
 import { useModalContext } from "@/app/providers/ModalProvider";
+import { useNotificationContext } from "@/app/providers/NotificationProvider";
+import { AxiosError } from "axios";
 
 const AddPostModal = () => {
   const {
@@ -32,6 +35,14 @@ const AddPostModal = () => {
     resolver: zodResolver(addPostSchema),
   });
 
+  const { mutate } = useMutation(addPostQuery());
+  const [newContent, setNewContent] = useState<string>("");
+  const [url, setUrl] = useState<string | null>(null);
+  const authUserId = useSelector((store: RootState) => store.auth.authUser?.id);
+  const { setIsModelOpen } = useModalContext();
+  const { setNotification } = useNotificationContext();
+  const queryClient = useQueryClient();
+
   const transport = useMemo(() => {
     return new FetchStreamTransport({
       apiUrl: "/api/generative",
@@ -41,9 +52,8 @@ const AddPostModal = () => {
   const stream = useStream({
     transport,
   });
-  const [newContent, setNewContent] = useState<string>("");
 
-  const contentGenerate = async () => {
+  const contentGenerate = useCallback(async () => {
     const content = getValues().content;
 
     if (!content && !url) return;
@@ -59,45 +69,51 @@ const AddPostModal = () => {
     const cont = await result.json();
     setNewContent(cont.content);
     setValues({ content: cont.content });
-  };
+  }, [getValues, setValues, url]);
 
-  const { mutate } = useMutation(addPostQuery());
-  const authUserId = useSelector((store: RootState) => store.auth.authUser?.id);
+  const onSubmit = useCallback(
+    async (data: addPostSchemaType) => {
+      if (!authUserId) {
+        return;
+      }
 
-  const [url, setUrl] = useState<string | null>(null);
-
-  const queryClient = useQueryClient();
-
-  // form submition
-  const onSubmit = async (data: addPostSchemaType) => {
-    if (!authUserId) {
-      return;
-    }
-    alert(JSON.stringify(data));
-
-    mutate(
-      {
-        user_id: authUserId,
-        content: newContent === "" ? data.content : newContent,
-        attachment: url || "",
-      },
-      {
-        onError: (error) => {
-          reset();
-          toast.error(error.message);
+      mutate(
+        {
+          user_id: authUserId,
+          content: newContent === "" ? data.content : newContent,
+          attachment: url || "",
         },
-        onSuccess: (data) => {
-          toast.success(data.message);
-          setIsModelOpen(false);
-          replaceHash();
-          reset();
-          queryClient.invalidateQueries({
-            queryKey: ["getPosts"],
-          });
+        {
+          onError: (error: any) => {
+            reset();
+            setNotification({
+              message: error?.response?.data?.message,
+              status: error?.response?.status,
+            });
+          },
+          onSuccess: (data) => {
+            setNotification({ status: 202, message: data.message });
+            setIsModelOpen(false);
+            replaceHash();
+            reset();
+            queryClient.invalidateQueries({
+              queryKey: ["getPosts"],
+            });
+          },
         },
-      },
-    );
-  };
+      );
+    },
+    [
+      authUserId,
+      mutate,
+      newContent,
+      queryClient,
+      reset,
+      setIsModelOpen,
+      setNotification,
+      url,
+    ],
+  );
 
   // useMemo(() => {
   //   const content = stream.messages.map((msg) => {
@@ -109,11 +125,11 @@ const AddPostModal = () => {
   //   return content;
   // }, [setValues, stream.messages]);
 
-  const { setIsModelOpen } = useModalContext();
+  console.log("Errors", errors);
 
   return (
     <div className="fixed z-50 left-0 top-0 w-full h-full bg-opacity-50 backdrop-blur-sm">
-      <div className="fixed  z-50 p-5 select-none border rounded-2xl bg-post-background w-1/2 h-fit   top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <div className="fixed  z-50 p-5 select-none border rounded-2xl bg-post-background w-full md:w-1/2 h-fit top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <div className="w-full flex justify-between">
           <h1 className="font-bold">Add Post</h1>
           <h1 className="font-bold text-icon-color cursor-pointer transition-all hover:scale-110">

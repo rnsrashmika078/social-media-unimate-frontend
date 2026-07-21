@@ -29,7 +29,7 @@ export const commentSchema = z.object({
 export type commentSchemaType = z.infer<typeof commentSchema>;
 
 export const addPostSchema = z.object({
-  content: z.string(),
+  content: z.string().min(1, "Content is required!"),
 });
 
 export type addPostSchemaType = z.infer<typeof addPostSchema>;

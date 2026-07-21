@@ -10,11 +10,10 @@ import { Button } from "../ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { commentSchemaType, commentSchema } from "@/app/schema/zodSchema";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import { useQueryClient } from "@tanstack/react-query";
-import React, { memo } from "react";
+import { memo } from "react";
 import { IoMdSend } from "react-icons/io";
 interface CommentSectionProps {
   postId: number;
@@ -49,17 +48,18 @@ const CommentSection = memo(({ postId }: CommentSectionProps) => {
       },
       {
         onError: (error) => {
-          reset();
-          toast.error(error.message);
+          // reset();
+          // toast.error(error.message);
         },
         onSuccess: (data) => {
-          toast.success(data.message);
+          // toast.success(data.message);
           queryClient.invalidateQueries({
             queryKey: ["getPosts"],
           });
           queryClient.invalidateQueries({
             queryKey: ["comments", postId],
           });
+          reset();
         },
       },
     );
@@ -67,8 +67,6 @@ const CommentSection = memo(({ postId }: CommentSectionProps) => {
 
   return (
     <>
-      <hr className="mt-2" />
-
       {comments?.map((c) => (
         <div key={c.id} className="w-full mt-2">
           <UserPlate
@@ -80,6 +78,7 @@ const CommentSection = memo(({ postId }: CommentSectionProps) => {
             profileImage={c.user.dp}
             settings={false}
           />
+          <hr className="mt-2" />
         </div>
       ))}
       <hr className="mt-2" />

@@ -5,12 +5,9 @@ import { FaUserCircle } from "react-icons/fa";
 import Link from "next/link";
 import { frontEndConfig } from "@/config";
 import { Button } from "../ui/button";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store/store";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   acceptRequestQuery,
-  addFriendQuery,
 } from "@/app/queryOptions/friendsQuery";
 import { useNotificationContext } from "@/app/providers/NotificationProvider";
 interface BadgeProps {
@@ -37,7 +34,6 @@ const ListBadge = memo(
     firstname,
     senderId,
   }: BadgeProps) => {
-    const authUser = useSelector((store: RootState) => store.auth.authUser);
 
     const { mutate } = useMutation(acceptRequestQuery());
     const { setNotification } = useNotificationContext();

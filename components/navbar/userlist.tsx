@@ -2,7 +2,7 @@ import { AuthUserType } from "@/app/types/globalTypes";
 import { FaSpinner } from "react-icons/fa";
 import { memo } from "react";
 import dynamic from "next/dynamic";
-const Badge = dynamic(() => import("./badge"));
+const Badge = dynamic(() => import("../custom/badge"));
 
 const UserList = memo(
   ({
@@ -18,6 +18,8 @@ const UserList = memo(
       );
     }
 
+    console.log(friends);
+
     return (
       <div className="absolute  max-h-[400px] min-h-[40px] custom-scrollbar-y top-8 left-0 rounded-2xl z-100 p-2 w-full bg-accent ">
         {isLoading && (
@@ -29,7 +31,7 @@ const UserList = memo(
           friends?.map((f) => (
             <div key={f.id} className="flex w-full hover:bg-card">
               <Badge
-                action={true}
+                action={!f.is_friend && !f.is_friend_2}
                 firstname={f.firstname}
                 lastname={f.lastname}
                 id={f.id}
